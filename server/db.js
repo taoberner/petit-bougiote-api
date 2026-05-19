@@ -1,9 +1,9 @@
 const fs   = require('fs');
 const path = require('path');
 
-const DB_PATH = process.env.DATA_PATH
-  ? path.join(process.env.DATA_PATH, 'orders.json')
-  : path.join(__dirname, '..', 'orders.json');
+const DATA_DIR   = process.env.DATA_PATH || path.join(__dirname, '..');
+const DB_PATH    = path.join(DATA_DIR, 'orders.json');
+const STATUS_PATH = path.join(DATA_DIR, 'status.json');
 
 function read() {
   if (!fs.existsSync(DB_PATH)) return {};
@@ -43,4 +43,13 @@ const db = {
   },
 };
 
-module.exports = db;
+const status = {
+  get() {
+    try { return JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8')); } catch { return { open: true }; }
+  },
+  set(open) {
+    fs.writeFileSync(STATUS_PATH, JSON.stringify({ open }));
+  },
+};
+
+module.exports = { ...db, status };

@@ -365,8 +365,26 @@ async function placeOrder() {
   }
 }
 
+async function checkOpen() {
+  try {
+    const res  = await fetch('/api/status');
+    const data = await res.json();
+    if (!data.open) {
+      const btn = document.getElementById('btn-order');
+      btn.disabled = true;
+      btn.textContent = '🔴 Commandes fermées pour le moment';
+
+      const errEl = document.getElementById('error-msg');
+      errEl.textContent = 'Le restaurant est actuellement fermé. Les commandes en ligne ne sont pas disponibles pour l\'instant.';
+      errEl.style.display = 'block';
+      errEl.style.color = '#EF4444';
+    }
+  } catch(e) {}
+}
+
 renderMenu();
 renderCart();
+checkOpen();
 </script>
 </body>
 </html>

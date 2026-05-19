@@ -1,8 +1,10 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const express = require('express');
-const session = require('express-session');
-const cors    = require('cors');
-const path    = require('path');
+const express   = require('express');
+const session   = require('express-session');
+const cors      = require('cors');
+const path      = require('path');
+const helmet    = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const { router: ordersRouter } = require('./routes/orders');
 const webhookRouter = require('./routes/webhook');
@@ -13,7 +15,20 @@ const PORT = process.env.PORT || 3000;
 // Webhook Stripe doit recevoir le corps brut AVANT express.json()
 app.use('/api/webhook', webhookRouter);
 
-app.use(cors());
+// Headers de sécurité
+app.use(helmet());
+
+// CORS restreint au domaine de production
+const allowedOrigins = [
+  process.env.BASE_URL,
+  'http://localhost:3000',
+].filter(Boolean);
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 app.use(express.json());
 app.set('trust proxy', 1);
 
@@ -30,7 +45,15 @@ app.use(session({
 
 // ── Auth endpoints ────────────────────────────────────────────────
 
-app.post('/api/login', (req, res) => {
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,                   // 10 tentatives max
+  message: { error: 'Trop de tentatives, réessayez dans 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.post('/api/login', loginLimiter, (req, res) => {
   if (req.body.password === process.env.DASHBOARD_PASSWORD) {
     req.session.authenticated = true;
     res.json({ ok: true });
@@ -82,6 +105,21 @@ app.use(express.static(path.join(__dirname, '..')));
 app.use('/api/orders', ordersRouter);
 
 app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
+
+// ── Statut ouvert/fermé ───────────────────────────────────────────
+const db = require('./db');
+
+app.get('/api/status', (req, res) => {
+  res.json(db.status.get());
+});
+
+app.post('/api/status', (req, res) => {
+  if (!req.session || !req.session.authenticated) return res.status(401).json({ error: 'Non authentifié' });
+  const { open } = req.body;
+  if (typeof open !== 'boolean') return res.status(400).json({ error: 'open doit être un booléen' });
+  db.status.set(open);
+  res.json({ ok: true, open });
+});
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Le Petit Bougiote API démarré sur http://localhost:${PORT}`);

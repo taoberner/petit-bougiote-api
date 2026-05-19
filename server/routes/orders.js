@@ -44,6 +44,10 @@ router.get('/events', (req, res) => {
 // Créer une commande + session Stripe Checkout
 router.post('/', async (req, res) => {
   try {
+    if (!db.status.get().open) {
+      return res.status(503).json({ error: 'Le restaurant est actuellement fermé. Les commandes ne sont pas acceptées.' });
+    }
+
     const { customer, phone, address, items, note } = req.body;
 
     if (!customer || !phone || !address || !items?.length) {

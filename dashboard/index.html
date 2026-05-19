@@ -110,6 +110,27 @@
     .sound-btn:hover, .sound-btn.on { border-color: var(--green); color: var(--green); }
     .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
+    .open-toggle {
+      display: flex; align-items: center; gap: .4rem;
+      padding: .35rem .85rem;
+      border-radius: 8px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid;
+      transition: all .2s;
+    }
+    .open-toggle.open {
+      background: rgba(34,197,94,.12);
+      border-color: rgba(34,197,94,.35);
+      color: var(--green);
+    }
+    .open-toggle.closed {
+      background: rgba(239,68,68,.1);
+      border-color: rgba(239,68,68,.35);
+      color: var(--red);
+    }
+
     /* ── TABS ── */
     .tab-bar {
       background: var(--bg2);
@@ -376,6 +397,7 @@
   </div>
 
   <div class="header-right">
+    <button class="open-toggle open" id="open-toggle" onclick="toggleOpen()">🟢 Ouvert</button>
     <button class="sound-btn on" id="sound-btn" onclick="toggleSound()">🔔</button>
     <button class="logout-btn" onclick="logout()">Déconnexion</button>
     <div class="conn-pill" id="conn-pill">
@@ -663,14 +685,49 @@ function connectSSE() {
   };
 }
 
+// ── Ouvert / Fermé ───────────────────────────────────────────────
+
+async function syncOpenStatus() {
+  try {
+    const res  = await fetch('/api/status');
+    const data = await res.json();
+    applyOpenStatus(data.open);
+  } catch(e) {}
+}
+
+function applyOpenStatus(open) {
+  const btn = document.getElementById('open-toggle');
+  if (open) {
+    btn.textContent = '🟢 Ouvert';
+    btn.className = 'open-toggle open';
+  } else {
+    btn.textContent = '🔴 Fermé';
+    btn.className = 'open-toggle closed';
+  }
+  btn.dataset.open = open ? '1' : '0';
+}
+
+async function toggleOpen() {
+  const btn  = document.getElementById('open-toggle');
+  const open = btn.dataset.open !== '1';
+  const res  = await fetch('/api/status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ open }),
+  });
+  if (res.ok) {
+    applyOpenStatus(open);
+    showToast(open ? '🟢 Magasin ouvert — les commandes sont acceptées' : '🔴 Magasin fermé — les commandes sont bloquées', 'success');
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────────
 
 async function init() {
-  await syncOrders();
+  await Promise.all([syncOrders(), syncOpenStatus()]);
   render();
   connectSSE();
 
-  // Refresh les timers toutes les 30s
   setInterval(render, 30000);
 
   if ('Notification' in window && Notification.permission === 'default') {
