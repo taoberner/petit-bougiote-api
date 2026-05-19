@@ -16,7 +16,9 @@ const PORT = process.env.PORT || 3000;
 app.use('/api/webhook', webhookRouter);
 
 // Headers de sécurité
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 
 // CORS restreint au domaine de production
 const allowedOrigins = [
