@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le Petit Bougiote — Coffee & Burger | Béziers</title>
+  <meta name="description" content="Restaurant Coffee & Burger artisanal à Béziers. Burgers gourmets, frites maison, café de spécialité. 28 Rue Diderot, 34500 Béziers. Note 5/5 Google." />
+  <meta property="og:title" content="Le Petit Bougiote — Coffee & Burger" />
+  <meta property="og:description" content="Votre instant gourmand à Béziers. Burgers artisanaux, frites maison et café de spécialité." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --green:       #2D7D59;
+      --green-dark:  #1B4D38;
+      --green-light: #3a9e70;
+      --gold:        #C8973A;
+      --dark:        #0E0E0C;
+      --dark2:       #161612;
+      --dark3:       #1E1E1A;
+      --cream:       #F5F0E8;
+      --cream2:      #EDE8DE;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
+
+    /* ===== TYPOGRAPHY ===== */
+    .playfair { font-family: 'Playfair Display', serif; }
+    .dancing  { font-family: 'Dancing Script', cursive; }
+    .heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, var(--green-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 50px;
+      font-weight: 600; font-size: 0.95rem;
+      cursor: pointer; border: none;
+      transition: all .3s ease; text-decoration: none;
+    }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-green:hover { background: var(--green-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(45,125,89,.4); }
+    .btn-outline { background: transparent; color: var(--green); border: 2px solid var(--green); }
+    .btn-outline:hover { background: var(--green); color: #fff; transform: translateY(-2px); }
+
+    /* ===== BADGE ===== */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(45,125,89,.15); border: 1px solid rgba(45,125,89,.4);
+      color: var(--green-light); padding: 6px 14px;
+      border-radius: 50px; font-size: .75rem;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* ===== CARDS ===== */
+    .glass-card {
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+    }
+    .section-sep {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+      border-radius: 2px; margin: 0 auto 2rem;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 6rem 0; }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp  { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+    @keyframes float     { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+    @keyframes marquee   { from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+    @keyframes pulseDot  { 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+    .anim-up   { opacity:0; animation: fadeInUp .7s ease forwards; }
+    .anim-in   { opacity:0; animation: fadeIn .7s ease forwards; }
+    .float     { animation: float 3s ease-in-out infinite; }
+    .d1 { animation-delay:.1s; }
+    .d2 { animation-delay:.2s; }
+    .d3 { animation-delay:.3s; }
+    .d4 { animation-delay:.4s; }
+    .d5 { animation-delay:.5s; }
+    .d6 { animation-delay:.6s; }
+    .d7 { animation-delay:.7s; }
+    .d8 { animation-delay:.8s; }
+
+    /* ==========================
+       NAVIGATION
+    ========================== */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      padding: 1.2rem 0;
+      transition: all .4s ease;
+    }
+    #nav.scrolled {
+      padding: .7rem 0;
+      background: rgba(14,14,12,.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      box-shadow: 0 4px 40px rgba(0,0,0,.5);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-brand { display: flex; align-items: center; gap: .75rem; }
+    .nav-logo {
+      width: 42px; height: 42px; border-radius: 50%;
+      overflow: hidden; border: 2px solid rgba(45,125,89,.5);
+      flex-shrink: 0; transition: border-color .3s;
+    }
+    .nav-logo:hover { border-color: var(--green); }
+    .nav-logo img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
+    .nav-brand-text { line-height: 1.2; }
+    .nav-brand-text .name { font-family:'Playfair Display',serif; font-weight:700; font-size:.95rem; color:#fff; }
+    .nav-brand-text .sub  { font-family:'Dancing Script',cursive; font-size:.85rem; color:var(--gold); }
+    nav ul {
+      display: flex; list-style: none; gap: 2rem;
+      align-items: center;
+    }
+    nav ul a {
+      font-size: .875rem; font-weight: 500; color: var(--cream2);
+      position: relative; transition: color .3s;
+    }
+    nav ul a::after {
+      content:''; position:absolute; bottom:-4px; left:0;
+      width:0; height:2px; background:var(--green); transition:width .3s;
+    }
+    nav ul a:hover { color: var(--green-light); }
+    nav ul a:hover::after { width: 100%; }
+    .nav-cta { display: flex; align-items: center; gap: 1rem; }
+    .nav-phone { font-size:.85rem; color:var(--cream2); display:flex; align-items:center; gap:.4rem; transition:color .3s; }
+    .nav-phone:hover { color: var(--green-light); }
+    .nav-phone svg { color: var(--green); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span { display:block; width:24px; height:2px; background:#fff; border-radius:2px; transition:all .3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    #mobile-menu {
+      display: none; flex-direction: column;
+      background: rgba(14,14,12,.98); padding: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,.05);
+      gap: 1rem;
+    }
+    #mobile-menu a { font-size:1rem; padding:.5rem 0; color:var(--cream2); border-bottom:1px solid rgba(255,255,255,.05); }
+    #mobile-menu a:last-child { border:none; }
+    #mobile-menu.open { display: flex; }
+
+    @media(max-width:768px){
+      nav ul, .nav-cta { display:none; }
+      .hamburger { display:flex; }
+      .nav-brand-text { display:none; }
+    }
+
+    /* ==========================
+       HERO
+    ========================== */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%; height: 100%; object-fit: cover;
+      transform: scale(1.05);
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(14,14,12,.8) 0%, rgba(14,14,12,.55) 50%, #0E0E0C 100%);
+    }
+    .hero-glow {
+      position: absolute; top: 33%; left: 50%; transform: translate(-50%,-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(45,125,89,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 760px; padding: 0 1.5rem;
+    }
+    .hero-badge { margin-bottom: 1.5rem; }
+    .hero-logo {
+      width: 120px; height: 120px; margin: 0 auto 1rem;
+    }
+    .hero-logo img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 0 30px rgba(45,125,89,.3)); }
+    .hero-script { font-family:'Dancing Script',cursive; color:var(--gold); font-size:1.6rem; margin-bottom:.5rem; }
+    .hero-title {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 800; color: #fff; line-height: 1;
+      margin-bottom: 1.25rem;
+    }
+    .hero-sub {
+      color: rgba(237,232,222,.75); font-size: 1.1rem; line-height: 1.7;
+      max-width: 520px; margin: 0 auto 2rem;
+    }
+    .hero-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom: 2rem; }
+    .hero-pills { display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap; }
+    .hero-pill {
+      display: flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50px; padding: .5rem 1rem;
+      font-size: .85rem; color: var(--cream2);
+      backdrop-filter: blur(8px);
+    }
+    .hero-meta {
+      position: relative; z-index: 1;
+      margin-top: 2rem; display:flex; align-items:center;
+      gap:.5rem; color:rgba(237,232,222,.5); font-size:.875rem;
+    }
+    .hero-meta strong { color: var(--gold); }
+    .hero-meta .dot { color: rgba(255,255,255,.2); }
+    .scroll-arrow {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      z-index:1; color: rgba(255,255,255,.3); animation: float 2s ease-in-out infinite;
+      transition: color .3s;
+    }
+    .scroll-arrow:hover { color: var(--green); }
+    .scroll-arrow svg { width:32px; height:32px; }
+
+    /* ==========================
+       ABOUT
+    ========================== */
+    #about { background: var(--dark); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-images { position: relative; }
+    .img-collage { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .img-main {
+      grid-column: 1/-1; border-radius: 18px; overflow: hidden;
+      height: 280px; position: relative;
+    }
+    .img-main img, .img-thumb img { width:100%; height:100%; object-fit:cover; }
+    .img-thumb { border-radius: 14px; overflow:hidden; height: 170px; position:relative; }
+    .img-label {
+      position: absolute; bottom: .75rem; left: .75rem;
+      background: rgba(45,125,89,.8); color: #fff;
+      font-size: .75rem; font-weight: 600;
+      padding: .3rem .8rem; border-radius: 50px;
+      backdrop-filter: blur(4px);
+    }
+    .img-label.gold { background: rgba(200,151,58,.8); }
+    .about-floating-badge {
+      position: absolute; top: -1rem; right: -1.5rem;
+      background: var(--green); color: #fff;
+      border-radius: 18px; padding: 1rem 1.2rem;
+      box-shadow: 0 8px 40px rgba(45,125,89,.4);
+      text-align: center;
+    }
+    .about-floating-badge .big { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; line-height:1; }
+    .about-floating-badge .small { font-size:.7rem; color:rgba(255,255,255,.75); margin-top:.2rem; }
+    .about-text .badge { margin-bottom: 1.25rem; }
+    .about-text p { color: rgba(237,232,222,.75); line-height: 1.8; margin-bottom: 1rem; }
+    .about-text strong { color: #fff; }
+    .about-text .green { color: var(--green-light); }
+    .about-text .gold  { color: var(--gold); font-weight: 600; }
+    .about-btns { display:flex; gap:1rem; flex-wrap:wrap; margin-top: 2rem; }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-top:5rem; }
+    .stat-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px; padding: 1.5rem;
+      text-align: center; transition:all .3s;
+    }
+    .stat-card:hover { border-color: rgba(45,125,89,.3); transform: translateY(-4px); }
+    .stat-icon { font-size:1.75rem; margin-bottom:.5rem; }
+    .stat-val { font-family:'Playfair Display',serif; font-size:1.75rem; font-weight:700; color:#fff; }
+    .stat-label { font-size:.8rem; color:rgba(237,232,222,.5); margin-top:.25rem; }
+    @media(max-width:900px){
+      .about-grid { grid-template-columns:1fr; }
+      .about-floating-badge { top:-1rem; right:0; }
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+    }
+
+    /* ==========================
+       FORMULES
+    ========================== */
+    #formules { background: var(--dark); }
+    .formules-header { text-align:center; margin-bottom:3rem; }
+    .formules-header p { color:rgba(237,232,222,.6); max-width:500px; margin:.75rem auto 0; }
+    .formules-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; margin-bottom:3rem; }
+    .formule-card {
+      border-radius:24px; padding:2rem;
+      transition:all .3s; position:relative;
+    }
+    .formule-card.normal { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07); }
+    .formule-card.highlight {
+      border:2px solid rgba(200,151,58,.45);
+      background:linear-gradient(160deg, rgba(200,151,58,.1) 0%, transparent 100%);
+      box-shadow:0 20px 60px rgba(200,151,58,.08);
+    }
+    .formule-card:hover { transform:translateY(-6px); }
+    .formule-badge {
+      position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+      background:var(--gold); color:#fff; font-size:.72rem; font-weight:700;
+      padding:.35rem 1rem; border-radius:50px; white-space:nowrap;
+      text-transform:uppercase; letter-spacing:.5px;
+    }
+    .formule-emoji { font-size:2.5rem; margin-bottom:1rem; }
+    .formule-name { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:#fff; margin-bottom:.5rem; }
+    .formule-desc { color:rgba(237,232,222,.55); font-size:.875rem; line-height:1.6; margin-bottom:1.5rem; }
+    .formule-items { list-style:none; margin-bottom:2rem; display:flex; flex-direction:column; gap:.5rem; }
+    .formule-items li { display:flex; align-items:center; gap:.6rem; font-size:.875rem; color:rgba(237,232,222,.75); }
+    .formule-items li::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--green); flex-shrink:0; }
+    .formule-bottom { display:flex; justify-content:space-between; align-items:flex-end; }
+    .formule-price { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; line-height:1; }
+    .formule-per { font-size:.75rem; color:rgba(237,232,222,.35); margin-top:.2rem; }
+    .formule-link { font-size:.875rem; font-weight:600; color:var(--green); transition:color .3s; }
+    .formule-link:hover { color:var(--green-light); }
+    .formule-img { max-width:700px; margin:0 auto; }
+    .formule-img img { width:100%; border-radius:20px; border:1px solid rgba(255,255,255,.08); }
+    .formule-img p { text-align:center; color:rgba(237,232,222,.3); font-size:.8rem; margin-top:.75rem; }
+    @media(max-width:768px){ .formules-grid{ grid-template-columns:1fr; gap:2.5rem; } }
+
+    /* ==========================
+       REVIEWS
+    ========================== */
+    #avis { background: var(--dark2); }
+    .avis-header { text-align:center; margin-bottom:3rem; }
+    .rating-summary { display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap; margin-top:1rem; }
+    .stars-big { display:flex; gap:3px; }
+    .stars-big span { color:var(--gold); font-size:1.3rem; }
+    .rating-num { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:#fff; }
+    .rating-meta { color:rgba(237,232,222,.55); font-size:.875rem; }
+    .reviews-slider { overflow:hidden; position:relative; }
+    .reviews-track {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;
+    }
+    .review-card {
+      background:var(--dark3); border:1px solid rgba(45,125,89,.2);
+      border-radius:16px; padding:1.5rem; transition:all .3s;
+    }
+    .review-card:hover { border-color:rgba(45,125,89,.5); transform:translateY(-4px); }
+    .review-top { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+    .review-avatar {
+      width:42px; height:42px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:700; font-size:.85rem; flex-shrink:0;
+    }
+    .review-name { font-weight:600; color:#fff; font-size:.9rem; }
+    .review-date { font-size:.75rem; color:rgba(237,232,222,.35); margin-top:.1rem; }
+    .review-stars { display:flex; gap:2px; margin-bottom:.75rem; }
+    .review-stars span { color:var(--gold); font-size:.85rem; }
+    .review-text { font-size:.875rem; color:rgba(237,232,222,.75); line-height:1.7; font-style:italic; }
+    .reviews-nav { display:flex; align-items:center; justify-content:center; gap:1rem; margin-top:2rem; }
+    .nav-btn {
+      width:40px; height:40px; border-radius:50%;
+      border:1px solid rgba(255,255,255,.2); background:none;
+      color:rgba(255,255,255,.5); cursor:pointer; transition:all .3s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .nav-btn:hover { border-color:var(--green); color:var(--green); }
+    .nav-btn:disabled { opacity:.25; cursor:default; }
+    .nav-btn svg { width:18px; height:18px; }
+    .dots { display:flex; gap:6px; }
+    .dot {
+      width:6px; height:6px; border-radius:50%;
+      background:rgba(255,255,255,.2); cursor:pointer; transition:all .3s;
+      border:none;
+    }
+    .dot.active { width:24px; border-radius:3px; background:var(--green); }
+    .google-link { text-align:center; margin-top:1.5rem; }
+    .google-link a { font-size:.85rem; color:rgba(237,232,222,.35); transition:color .3s; }
+    .google-link a:hover { color:rgba(237,232,222,.65); }
+    @media(max-width:900px){ .reviews-track{ grid-template-columns:1fr; } }
+    @media(min-width:601px) and (max-width:900px){ .reviews-track{ grid-template-columns:repeat(2,1fr); } }
+
+    /* ==========================
+       CONTACT
+    ========================== */
+    #contact { background: var(--dark); }
+    .contact-header { text-align:center; margin-bottom:3.5rem; }
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+    .contact-cards { display:flex; flex-direction:column; gap:1.25rem; }
+    .info-card {
+      background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+      border-radius:16px; padding:1.5rem;
+      display:flex; align-items:flex-start; gap:1rem;
+    }
+    .info-icon {
+      width:44px; height:44px; border-radius:12px;
+      background:rgba(45,125,89,.18); color:var(--green);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .info-icon svg { width:20px; height:20px; }
+    .info-title { font-weight:600; color:#fff; margin-bottom:.3rem; }
+    .info-val { color:rgba(237,232,222,.65); font-size:.9rem; line-height:1.7; }
+    .info-val a { transition:color .3s; }
+    .info-val a:hover { color:var(--green-light); }
+    .info-sub { color:rgba(237,232,222,.35); font-size:.78rem; margin-top:.4rem; }
+    .maps-link {
+      display:inline-flex; align-items:center; gap:.3rem;
+      font-size:.875rem; color:var(--green); font-weight:600;
+      margin-top:.6rem; transition:color .3s;
+    }
+    .maps-link:hover { color:var(--green-light); }
+    .hours-list { display:flex; flex-direction:column; gap:.3rem; margin-top:.4rem; }
+    .hour-row {
+      display:flex; justify-content:space-between;
+      font-size:.85rem; padding:.4rem .75rem; border-radius:8px;
+      color:rgba(237,232,222,.55);
+    }
+    .hour-row.today { background:rgba(45,125,89,.18); color:var(--green-light); font-weight:600; }
+    .hour-row.today .day { display:flex; align-items:center; gap:.5rem; }
+    .today-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulseDot 1.5s infinite; }
+    .closed { color:rgba(220,80,80,.6); }
+    .contact-ctas { display:flex; gap:.75rem; flex-wrap:wrap; }
+    .contact-ctas .btn { flex:1; justify-content:center; min-width:140px; }
+    .map-wrapper {
+      border-radius:24px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 60px rgba(0,0,0,.4);
+      height:100%; min-height:500px;
+    }
+    .map-wrapper iframe { width:100%; height:100%; min-height:500px; border:0; filter:grayscale(30%) contrast(1.1); }
+    .marquee-strip {
+      margin-top:5rem; padding:1.25rem;
+      background:rgba(45,125,89,.08); border:1px solid rgba(45,125,89,.18);
+      border-radius:16px; overflow:hidden;
+    }
+    .marquee-inner {
+      display:flex; gap:3rem; white-space:nowrap;
+      animation:marquee 25s linear infinite;
+    }
+    .marquee-item { color:rgba(237,232,222,.45); font-size:.875rem; font-weight:500; }
+    .marquee-sep { color:var(--green); }
+    @media(max-width:900px){
+      .contact-grid{ grid-template-columns:1fr; }
+      .map-wrapper{ min-height:320px; }
+      .map-wrapper iframe { min-height:320px; }
+    }
+
+    /* ==========================
+       FOOTER
+    ========================== */
+    footer { background:#0A0A08; border-top:1px solid rgba(255,255,255,.05); }
+    .footer-main {
+      display:grid; grid-template-columns:2fr 1fr 1fr;
+      gap:3rem; padding:4rem 0 3rem;
+    }
+    .footer-brand { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+    .footer-logo { width:50px; height:50px; border-radius:50%; overflow:hidden; border:2px solid rgba(45,125,89,.4); }
+    .footer-logo img { width:100%; height:100%; object-fit:contain; padding:3px; }
+    .footer-brand-name { font-family:'Playfair Display',serif; font-weight:700; color:#fff; }
+    .footer-brand-sub { font-family:'Dancing Script',cursive; font-size:.9rem; color:var(--gold); }
+    .footer-desc { color:rgba(237,232,222,.4); font-size:.875rem; line-height:1.7; max-width:280px; }
+    .footer-stars { display:flex; gap:3px; margin-top:.75rem; }
+    .footer-stars span { color:var(--gold); font-size:.9rem; }
+    .footer-stars .meta { color:rgba(237,232,222,.3); font-size:.8rem; margin-left:.5rem; align-self:center; }
+    .footer-col h4 { font-size:.8rem; font-weight:600; text-transform:uppercase; letter-spacing:.1rem; color:#fff; margin-bottom:1.25rem; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+    .footer-col ul a { font-size:.875rem; color:rgba(237,232,222,.45); transition:color .3s; }
+    .footer-col ul a:hover { color:var(--green-light); }
+    .footer-contact-item { display:flex; align-items:flex-start; gap:.5rem; font-size:.875rem; color:rgba(237,232,222,.45); margin-bottom:.75rem; }
+    .footer-contact-item svg { color:var(--green); flex-shrink:0; margin-top:2px; }
+    .footer-contact-item a { transition:color .3s; }
+    .footer-contact-item a:hover { color:var(--green-light); }
+    .footer-bottom {
+      border-top:1px solid rgba(255,255,255,.05);
+      padding:1.5rem 0;
+      display:flex; justify-content:space-between; align-items:center;
+      flex-wrap:wrap; gap:.5rem;
+    }
+    .footer-bottom p { font-size:.75rem; color:rgba(237,232,222,.2); }
+    @media(max-width:768px){
+      .footer-main{ grid-template-columns:1fr; gap:2rem; padding:3rem 0 2rem; }
+      .footer-bottom{ flex-direction:column; text-align:center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===========================
+     NAVIGATION
+=========================== -->
+<header>
+  <div id="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#hero" class="nav-brand">
+          <div class="nav-logo">
+            <img src="images/logo.png" alt="Le Petit Bougiote" />
+          </div>
+          <div class="nav-brand-text">
+            <div class="name">Le Petit Bougiote</div>
+            <div class="sub">Coffee & Burger</div>
+          </div>
+        </a>
+
+        <nav>
+          <ul>
+            <li><a href="#hero">Accueil</a></li>
+            <li><a href="#formules">Formules</a></li>
+            <li><a href="#avis">Avis</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-cta">
+          <a href="tel:0458281522" class="nav-phone">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.17 6.17l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            04 58 28 15 22
+          </a>
+          <a href="commander.html" class="btn btn-green" style="padding:.6rem 1.25rem; font-size:.85rem;">🛒 Commander</a>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu">
+      <a href="#hero" onclick="closeMobile()">Accueil</a>
+      <a href="#formules" onclick="closeMobile()">Formules</a>
+      <a href="#avis" onclick="closeMobile()">Avis</a>
+      <a href="#contact" onclick="closeMobile()">Contact</a>
+      <a href="commander.html" style="color:var(--green-light); font-weight:600;">🛒 Commander en ligne</a>
+      <a href="tel:0458281522" style="color:var(--green-light);">📞 04 58 28 15 22</a>
+      <a href="tel:0759714629" style="color:var(--green-light);">📞 07 59 71 46 29</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===========================
+     HERO
+=========================== -->
+<section id="hero">
+  <div class="hero-bg">
+    <img src="images/salle.jpg" alt="Salle du restaurant Le Petit Bougiote" />
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge anim-in d1">
+      <span class="badge">⭐ Note 5/5 · 29 avis Google</span>
+    </div>
+
+    <div class="hero-logo anim-in d2">
+      <img src="images/logo.png" alt="Logo Le Petit Bougiote" class="float" />
+    </div>
+
+    <p class="hero-script anim-up d3">Votre instant gourmand</p>
+
+    <h1 class="hero-title anim-up d4">
+      Le Petit<br>
+      <span class="text-gradient">Bougiote</span>
+    </h1>
+
+    <p class="hero-sub anim-up d5">
+      Burgers artisanaux, frites maison et café de spécialité.<br>
+      Un concept gourmand au cœur de Béziers.
+    </p>
+
+    <div class="hero-btns anim-up d6">
+      <a href="commander.html" class="btn btn-green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        Commander en ligne
+      </a>
+      <a href="#contact" class="btn btn-outline">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Nous trouver
+      </a>
+    </div>
+
+    <div class="hero-pills anim-up d7">
+      <div class="hero-pill">🍔 Burgers artisanaux</div>
+      <div class="hero-pill">🍟 Frites maison</div>
+      <div class="hero-pill">☕ Coffee & Gâteaux</div>
+      <div class="hero-pill">☀️ Terrasse ensoleillée</div>
+    </div>
+  </div>
+
+  <div class="hero-meta anim-in d8">
+    <strong>10 – 20 €</strong>
+    <span>par personne</span>
+    <span class="dot">·</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+    <span>28 Rue Diderot, Béziers</span>
+  </div>
+
+  <a href="#about" class="scroll-arrow">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+  </a>
+</section>
+
+<!-- ===========================
+     ABOUT
+=========================== -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-images">
+        <div class="img-collage">
+          <div class="img-main">
+            <img src="images/salle.jpg" alt="Intérieur du restaurant" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(14,14,12,.45),transparent)"></div>
+          </div>
+          <div class="img-thumb">
+            <img src="images/menu-burgers.png" alt="Carte des burgers" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(14,14,12,.6),transparent)"></div>
+            <div class="img-label">Nos Burgers</div>
+          </div>
+          <div class="img-thumb">
+            <img src="images/menu-gouter.png" alt="Gâteaux et boissons" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(14,14,12,.6),transparent)"></div>
+            <div class="img-label gold">Coffee & Gâteaux</div>
+          </div>
+        </div>
+        <div class="about-floating-badge">
+          <div class="big">5★</div>
+          <div class="small">Google Reviews</div>
+        </div>
+      </div>
+
+      <div class="about-text">
+        <div class="badge" style="margin-bottom:1.25rem;">Notre histoire</div>
+        <h2 class="heading" style="color:#fff; margin-bottom:1.5rem;">
+          Un concept gourmand,<br>
+          <span class="text-gradient">une passion sincère</span>
+        </h2>
+        <div class="section-sep" style="margin-left:0; margin-bottom:2rem;"></div>
+        <p>Né en novembre 2025 au cœur de Béziers, <strong>Le Petit Bougiote</strong> est bien plus qu'un simple restaurant. C'est un lieu de vie chaleureux où chaque plat est préparé avec soin, en utilisant uniquement des <span class="green">produits frais et locaux</span>.</p>
+        <p>Notre chef vous accueille chaleureusement pour vous faire découvrir ses <strong>burgers gourmets</strong> aux saveurs authentiques, ses <strong>frites maison</strong> croustillantes, et ses <strong>cafés de spécialité</strong> accompagnés de délicieux gâteaux.</p>
+        <p>Profitez également de notre <span class="gold">terrasse ensoleillée</span> — le cadre idéal pour un déjeuner entre amis ou une pause gourmande.</p>
+        <div class="about-btns">
+          <a href="commander.html" class="btn btn-green">Commander en ligne</a>
+          <a href="tel:0458281522" class="btn btn-outline">Appeler</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val">5/5</div><div class="stat-label">Note Google</div></div>
+      <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-val">29</div><div class="stat-label">Avis clients</div></div>
+      <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val">10-20€</div><div class="stat-label">Prix par personne</div></div>
+      <div class="stat-card"><div class="stat-icon">🌿</div><div class="stat-val">100%</div><div class="stat-label">Produits frais</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     FORMULES
+=========================== -->
+<section id="formules">
+  <div class="container">
+    <div class="formules-header">
+      <div class="badge" style="margin-bottom:1.25rem;">Petit-déjeuner</div>
+      <h2 class="heading" style="color:#fff;">Commencez bien <span class="text-gradient">votre journée</span></h2>
+      <div class="section-sep"></div>
+      <p>Des formules simples et abordables pour démarrer en douceur</p>
+    </div>
+
+    <div class="formules-grid">
+      <div class="formule-card normal">
+        <div class="formule-emoji">☕</div>
+        <div class="formule-name">Formule Express</div>
+        <div class="formule-desc">Expresso + 1 viennoiserie</div>
+        <ul class="formule-items">
+          <li>1 expresso</li>
+          <li>1 croissant ou viennoiserie</li>
+        </ul>
+        <div class="formule-bottom">
+          <div>
+            <div class="formule-price" style="color:var(--green);">2€20</div>
+            <div class="formule-per">par personne</div>
+          </div>
+          <a href="tel:0458281522" class="formule-link">Commander →</a>
+        </div>
+      </div>
+
+      <div class="formule-card highlight">
+        <div class="formule-badge">⭐ Le plus populaire</div>
+        <div class="formule-emoji">🥐</div>
+        <div class="formule-name">Formule Classic</div>
+        <div class="formule-desc">Double expresso, café crème ou thé + 1 viennoiserie</div>
+        <ul class="formule-items">
+          <li>Double expresso, café crème ou thé</li>
+          <li>1 croissant ou viennoiserie</li>
+        </ul>
+        <div class="formule-bottom">
+          <div>
+            <div class="formule-price" style="color:var(--gold);">3€20</div>
+            <div class="formule-per">par personne</div>
+          </div>
+          <a href="tel:0458281522" class="formule-link">Commander →</a>
+        </div>
+      </div>
+
+      <div class="formule-card normal">
+        <div class="formule-emoji">🌅</div>
+        <div class="formule-name">Formule PDJ</div>
+        <div class="formule-desc">Boisson chaude + viennoiserie + jus d'orange</div>
+        <ul class="formule-items">
+          <li>Double expresso, café crème ou thé</li>
+          <li>1 viennoiserie</li>
+          <li>1 jus d'orange frais</li>
+        </ul>
+        <div class="formule-bottom">
+          <div>
+            <div class="formule-price" style="color:#b78ae0;">4€80</div>
+            <div class="formule-per">par personne</div>
+          </div>
+          <a href="tel:0458281522" class="formule-link">Commander →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="formule-img">
+      <img src="images/menu-petit-dej.png" alt="Formules petit-déjeuner" />
+      <p>Disponible tous les matins dès l'ouverture</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     AVIS
+=========================== -->
+<section id="avis">
+  <div class="container">
+    <div class="avis-header">
+      <div class="badge" style="margin-bottom:1.25rem;">Avis clients</div>
+      <h2 class="heading" style="color:#fff;">Ce que disent nos <span class="text-gradient">clients</span></h2>
+      <div class="section-sep"></div>
+      <div class="rating-summary">
+        <div class="stars-big">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <div class="rating-num">5.0</div>
+        <div class="rating-meta">/ 5 · <strong style="color:#fff;">29 avis</strong> Google vérifiés</div>
+      </div>
+    </div>
+
+    <div class="reviews-slider">
+      <div class="reviews-track" id="reviews-track"></div>
+    </div>
+
+    <div class="reviews-nav">
+      <button class="nav-btn" id="rev-prev" onclick="prevReviews()" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="dots" id="rev-dots"></div>
+      <button class="nav-btn" id="rev-next" onclick="nextReviews()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="google-link">
+      <a href="https://www.google.com/maps/search/le+petit+bougiote+beziers" target="_blank" rel="noopener">
+        🔍 Voir tous les avis sur Google
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     CONTACT
+=========================== -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-header">
+      <div class="badge" style="margin-bottom:1.25rem;">Nous trouver</div>
+      <h2 class="heading" style="color:#fff;">Venez nous <span class="text-gradient">rendre visite</span></h2>
+      <div class="section-sep"></div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-cards">
+        <!-- Adresse -->
+        <div class="info-card">
+          <div class="info-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="info-title">Adresse</div>
+            <div class="info-val">28 Rue Diderot<br>34500 Béziers, France</div>
+            <a href="https://maps.google.com/?q=28+Rue+Diderot+34500+Beziers" target="_blank" rel="noopener" class="maps-link">
+              Ouvrir dans Maps
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="info-card">
+          <div class="info-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.17 6.17l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="info-title">Téléphone</div>
+            <div class="info-val">
+              <a href="tel:0458281522">04 58 28 15 22</a><br>
+              <a href="tel:0759714629">07 59 71 46 29</a>
+            </div>
+            <div class="info-sub">Commandes sur place, à emporter et réservations</div>
+          </div>
+        </div>
+
+        <!-- Horaires -->
+        <div class="info-card">
+          <div class="info-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="info-title" style="margin-bottom:.75rem;">Horaires d'ouverture</div>
+            <div class="hours-list" id="hours-list"></div>
+          </div>
+        </div>
+
+        <!-- CTAs -->
+        <div class="contact-ctas">
+          <a href="tel:0458281522" class="btn btn-green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.17 6.17l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Appeler
+          </a>
+          <a href="https://maps.google.com/?q=28+Rue+Diderot+34500+Beziers" target="_blank" rel="noopener" class="btn btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Itinéraire
+          </a>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="map-wrapper">
+        <iframe
+          title="Localisation Le Petit Bougiote"
+          src="https://maps.google.com/maps?q=28+Rue+Diderot+34500+Beziers&output=embed"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Marquee strip -->
+    <div class="marquee-strip">
+      <div class="marquee-inner">
+        <span class="marquee-item">🍔 Burgers Artisanaux</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">🍟 Frites Maison</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">☕ Café Spécialité</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">🍰 Gâteaux Maison</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">☀️ Terrasse</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">⭐ Note 5/5 Google</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">🎉 Groupes Bienvenus</span><span class="marquee-sep">·</span>
+        <!-- duplicate for seamless loop -->
+        <span class="marquee-item">🍔 Burgers Artisanaux</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">🍟 Frites Maison</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">☕ Café Spécialité</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">🍰 Gâteaux Maison</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">☀️ Terrasse</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">⭐ Note 5/5 Google</span><span class="marquee-sep">·</span>
+        <span class="marquee-item">🎉 Groupes Bienvenus</span><span class="marquee-sep">·</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     FOOTER
+=========================== -->
+<footer>
+  <div class="container">
+    <div class="footer-main">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo"><img src="images/logo.png" alt="Logo" /></div>
+          <div>
+            <div class="footer-brand-name">Le Petit Bougiote</div>
+            <div class="footer-brand-sub">Coffee & Burger</div>
+          </div>
+        </div>
+        <p class="footer-desc">Votre restaurant Coffee & Burger artisanal au cœur de Béziers. Burgers gourmets, frites maison et café de spécialité depuis 2025.</p>
+        <div class="footer-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          <span class="meta">5/5 · 29 avis Google</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#hero">Accueil</a></li>
+          <li><a href="commander.html">Commander en ligne</a></li>
+          <li><a href="#formules">Formules PDJ</a></li>
+          <li><a href="#avis">Avis Clients</a></li>
+          <li><a href="#contact">Nous Trouver</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <div class="footer-contact-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>28 Rue Diderot, 34500 Béziers</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.17 6.17l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span><a href="tel:0458281522">04 58 28 15 22</a></span>
+        </div>
+        <div class="footer-contact-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.17 6.17l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span><a href="tel:0759714629">07 59 71 46 29</a></span>
+        </div>
+        <div class="footer-contact-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Lun–Sam : 11h30 – 20h00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span id="year"></span> Le Petit Bougiote — Coffee & Burger · Béziers · SIRL créée en novembre 2025</p>
+      <p>Restauration rapide · Code NAF 56.10C</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DATA
+============================================================ */
+const reviews = [
+  { name:"Nasser Boudina",    date:"Mai 2026",    text:"Le patron vous accueille chaleureusement et vous prépare à la commande des burgers vraiment goûteux, avec des frites maison… un délice.", initials:"NB", color:"#2D7D59" },
+  { name:"Hugo Seanosky",     date:"Mai 2026",    text:"Un des meilleurs burgers que j'ai mangé ! Un délice ! ❤️", initials:"HS", color:"#C8973A" },
+  { name:"Rose Laporte",      date:"Avr. 2026",   text:"Très bons burgers, bien garnis. Nous sommes venus à 9 et le patron nous a même offert une assiette de frites !", initials:"RL", color:"#9B6CD8" },
+  { name:"Aurelie Bozzi",     date:"Avr. 2026",   text:"Des bons burgers avec un large choix, et puis une mention spéciale pour le carrot cake en dessert. L'accueil très cordial est appréciable.", initials:"AB", color:"#E05C6A" },
+  { name:"Véronique BONNET",  date:"Avr. 2026",   text:"Si vous avez envie d'un délicieux burger, vous avez trouvé l'endroit. Tout est frais et délicieux. Une jolie placette pour le déguster.", initials:"VB", color:"#2D7D59" },
+  { name:"Roman Gm",          date:"Avr. 2026",   text:"Les Burgers sont délicieux 🔥 meilleurs que macdo", initials:"RG", color:"#C8973A" },
+  { name:"Maelys Desplat",    date:"Mars 2026",   text:"Menus copieux et peu cher pour la qualité ! Burgers artisanaux et délicieux je recommande !", initials:"MD", color:"#5B9BD5" },
+  { name:"Elsa REGNAULT",     date:"Mars 2026",   text:"Nous sommes venus avec un groupe d'amis, le chef a été très accueillant et le service rapide !", initials:"ER", color:"#3a9e70" },
+  { name:"Nathalie Pierrat",  date:"Mai 2026",    text:"Un accueil sympathique dans un lieu posé. Du choix et des prix attractifs — repas délicieux !", initials:"NP", color:"#9B6CD8" },
+  { name:"LEBONCOIN SAM",     date:"Mai 2026",    text:"Excellent !! Burgers de qualité et prix attractifs. Le service est nickel et le patron est sympa et très pro.", initials:"LS", color:"#E05C6A" },
+  { name:"Karine K.",         date:"Fév. 2026",   text:"Si vous aimez les burgers foncez ils sont trop bons et bien garnis, y a du choix et de bons produits.", initials:"KK", color:"#2D7D59" },
+  { name:"Yohann Larhant",    date:"Fév. 2026",   text:"Superbe découverte ! Terrasse au soleil très agréable.", initials:"YL", color:"#E8A630" },
+];
+
+const hours = [
+  { day:"Lundi",    h:"11h30 – 20h00" },
+  { day:"Mardi",    h:"11h30 – 20h00" },
+  { day:"Mercredi", h:"11h30 – 20h00" },
+  { day:"Jeudi",    h:"11h30 – 20h00" },
+  { day:"Vendredi", h:"11h30 – 20h00" },
+  { day:"Samedi",   h:"11h30 – 20h00" },
+  { day:"Dimanche", h:"Fermé" },
+];
+
+/* ============================================================
+   INIT
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('year').textContent = new Date().getFullYear();
+  renderReviews();
+  renderHours();
+  initNav();
+});
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+function initNav() {
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+}
+
+document.getElementById('hamburger').addEventListener('click', function() {
+  this.classList.toggle('open');
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
+
+function closeMobile() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+/* ============================================================
+   REVIEWS SLIDER
+============================================================ */
+let revPage = 0;
+const REV_PER = (() => window.innerWidth >= 900 ? 3 : window.innerWidth >= 601 ? 2 : 1)();
+
+function renderReviews() {
+  const track = document.getElementById('reviews-track');
+  const dots  = document.getElementById('rev-dots');
+  const pages = Math.ceil(reviews.length / 3);
+
+  const start = revPage * 3;
+  const visible = reviews.slice(start, start + 3);
+
+  track.innerHTML = visible.map(r => `
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-avatar" style="background:${r.color}">${r.initials}</div>
+        <div>
+          <div class="review-name">${r.name}</div>
+          <div class="review-date">${r.date}</div>
+        </div>
+      </div>
+      <div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div class="review-text">« ${r.text} »</div>
+    </div>
+  `).join('');
+
+  dots.innerHTML = Array.from({length: pages}, (_, i) => `
+    <button class="dot ${i===revPage?'active':''}" onclick="goToPage(${i})"></button>
+  `).join('');
+
+  document.getElementById('rev-prev').disabled = revPage === 0;
+  document.getElementById('rev-next').disabled = revPage >= pages - 1;
+}
+
+function prevReviews() { if(revPage>0){ revPage--; renderReviews(); } }
+function nextReviews()  { if(revPage < Math.ceil(reviews.length/3)-1){ revPage++; renderReviews(); } }
+function goToPage(p)    { revPage=p; renderReviews(); }
+
+/* ============================================================
+   HOURS
+============================================================ */
+function renderHours() {
+  const list = document.getElementById('hours-list');
+  const today = new Date().getDay(); // 0=Sun, 1=Mon...
+  const idx   = today === 0 ? 6 : today - 1;
+
+  list.innerHTML = hours.map((h, i) => {
+    const isToday = i === idx;
+    const isClosed = h.h === 'Fermé';
+    return `
+      <div class="hour-row ${isToday ? 'today' : ''}">
+        <span class="day">${isToday ? '<span class="today-dot"></span>' : ''}${h.day}</span>
+        <span class="${isClosed ? 'closed' : ''}">${h.h}</span>
+      </div>
+    `;
+  }).join('');
+}
+</script>
+</body>
+</html>

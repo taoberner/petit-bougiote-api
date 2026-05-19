@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commande confirmée — Le Petit Bougiote</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:#0E0E0C; color:#F5F0E8; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; }
+    .icon { font-size:5rem; margin-bottom:1.5rem; animation:pop .5s cubic-bezier(.175,.885,.32,1.275); }
+    @keyframes pop { 0%{transform:scale(0);} 100%{transform:scale(1);} }
+    h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3rem); color:#fff; margin-bottom:.75rem; }
+    .sub { font-family:'Dancing Script',cursive; color:#C8973A; font-size:1.3rem; margin-bottom:1.5rem; }
+    p { color:rgba(237,232,222,.6); max-width:460px; line-height:1.7; margin-bottom:2rem; }
+    .order-ref { background:rgba(45,125,89,.12); border:1px solid rgba(45,125,89,.3); border-radius:12px; padding:.75rem 1.5rem; display:inline-block; color:#3a9e70; font-weight:600; margin-bottom:2rem; font-size:.9rem; }
+    .btn { display:inline-flex; align-items:center; gap:.5rem; padding:.85rem 2rem; border-radius:50px; background:#2D7D59; color:#fff; font-weight:600; font-size:.95rem; text-decoration:none; transition:all .25s; }
+    .btn:hover { background:#3a9e70; transform:translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="icon">🎉</div>
+  <h1>Merci pour ta commande !</h1>
+  <p class="sub">Votre instant gourmand arrive bientôt</p>
+  <p>Ton paiement a bien été reçu. Le restaurant prépare et valide ta commande — tu seras livré dès que possible.</p>
+  <div class="order-ref" id="order-ref">Commande en cours de traitement...</div>
+  <a href="le-petit-bougiote/index.html" class="btn">← Retour au site</a>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('order');
+    if (id) document.getElementById('order-ref').textContent = 'Référence : #' + id.slice(0,8).toUpperCase();
+  </script>
+</body>
+</html>

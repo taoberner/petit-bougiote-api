@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commander — Le Petit Bougiote</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --green: #2D7D59; --green-dark: #1B4D38; --green-light: #3a9e70;
+      --gold: #C8973A; --dark: #0E0E0C; --dark2: #161612; --dark3: #1E1E1A;
+      --cream: #F5F0E8; --cream2: #EDE8DE;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--cream); min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* NAV */
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(14,14,12,.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,.06); padding: .9rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+    .nav-brand { display: flex; align-items: center; gap: .6rem; }
+    .nav-logo { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(45,125,89,.5); }
+    .nav-logo img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
+    .nav-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; }
+    .nav-sub  { font-family: 'Dancing Script', cursive; font-size: .8rem; color: var(--gold); }
+    .nav-back { margin-left: auto; font-size: .85rem; color: rgba(237,232,222,.5); display: flex; align-items: center; gap: .4rem; transition: color .2s; }
+    .nav-back:hover { color: var(--green-light); }
+
+    /* LAYOUT */
+    .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+    @media(max-width: 800px) { .page { grid-template-columns: 1fr; } }
+
+    /* SECTION TITLE */
+    .section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .5rem; }
+    .section-title span { font-size: 1.3rem; }
+
+    /* TABS */
+    .tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .tab { padding: .5rem 1.1rem; border-radius: 50px; font-size: .82rem; font-weight: 600; cursor: pointer; border: 2px solid rgba(45,125,89,.35); background: transparent; color: var(--cream2); transition: all .25s; white-space: nowrap; }
+    .tab:hover { border-color: var(--green); color: var(--green); }
+    .tab.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+    /* MENU ITEMS */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .item-card {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px; padding: 1rem; cursor: pointer;
+      transition: all .25s; display: flex; flex-direction: column; gap: .5rem;
+      position: relative;
+    }
+    .item-card:hover { border-color: rgba(45,125,89,.4); transform: translateY(-2px); }
+    .item-card.in-cart { border-color: var(--green); background: rgba(45,125,89,.08); }
+    .item-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #fff; }
+    .item-desc { font-size: .78rem; color: rgba(237,232,222,.5); line-height: 1.5; }
+    .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: .5rem; }
+    .item-price { color: var(--gold); font-weight: 700; font-size: .95rem; }
+    .item-qty { display: flex; align-items: center; gap: .4rem; }
+    .qty-btn {
+      width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer;
+      font-size: 1.1rem; font-weight: 700; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .qty-minus { background: rgba(255,255,255,.08); color: var(--cream2); }
+    .qty-minus:hover { background: rgba(220,80,80,.2); color: #f87171; }
+    .qty-plus  { background: var(--green); color: #fff; }
+    .qty-plus:hover  { background: var(--green-light); }
+    .qty-val { font-weight: 700; min-width: 18px; text-align: center; color: #fff; font-size: .9rem; }
+
+    /* CART / COMMANDE */
+    .cart-box {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px; padding: 1.5rem; position: sticky; top: 80px;
+    }
+    .cart-empty { text-align: center; color: rgba(237,232,222,.35); font-size: .875rem; padding: 2rem 0; }
+    .cart-items { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.25rem; }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; font-size: .875rem; }
+    .cart-item-name { color: var(--cream2); flex: 1; }
+    .cart-item-qty  { color: rgba(237,232,222,.45); margin: 0 .75rem; }
+    .cart-item-price { color: var(--gold); font-weight: 600; }
+    .cart-sep { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: .5rem 0; }
+    .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; }
+    .cart-total-val { color: var(--gold); font-family: 'Playfair Display', serif; }
+
+    /* FORM */
+    .form-section { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
+    .form-label { font-size: .78rem; font-weight: 600; color: rgba(237,232,222,.5); text-transform: uppercase; letter-spacing: .05rem; margin-bottom: .25rem; display: block; }
+    .form-input, .form-textarea {
+      width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; padding: .75rem 1rem; color: var(--cream);
+      font-family: 'Inter', sans-serif; font-size: .9rem;
+      outline: none; transition: border-color .2s;
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--green); }
+    .form-textarea { resize: vertical; min-height: 70px; }
+
+    /* SUBMIT */
+    .btn-order {
+      width: 100%; margin-top: 1rem; padding: 1rem;
+      background: var(--green); color: #fff; border: none; border-radius: 12px;
+      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: all .25s; display: flex; align-items: center; justify-content: center; gap: .5rem;
+    }
+    .btn-order:hover { background: var(--green-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(45,125,89,.4); }
+    .btn-order:disabled { background: rgba(255,255,255,.1); color: rgba(255,255,255,.3); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .stripe-note { text-align: center; color: rgba(237,232,222,.3); font-size: .75rem; margin-top: .75rem; display: flex; align-items: center; justify-content: center; gap: .3rem; }
+
+    /* HERO */
+    .page-hero { text-align: center; padding: 2.5rem 1.5rem 1.5rem; }
+    .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff; }
+    .page-hero p { color: rgba(237,232,222,.55); margin-top: .5rem; font-size: .9rem; }
+
+    .tag { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .6rem; border-radius: 50px; border: 1px solid; margin-top: .25rem; }
+    .tag-pop  { background: rgba(45,125,89,.15); color: #3a9e70; border-color: rgba(45,125,89,.4); }
+    .tag-chef { background: rgba(200,151,58,.12); color: var(--gold); border-color: rgba(200,151,58,.4); }
+    .tag-sign { background: rgba(155,108,216,.12); color: #b78ae0; border-color: rgba(155,108,216,.4); }
+    .tag-epi  { background: rgba(234,88,12,.1); color: #f97316; border-color: rgba(234,88,12,.3); }
+    .tag-leg  { background: rgba(14,165,233,.1); color: #38bdf8; border-color: rgba(14,165,233,.3); }
+    .tag-tend { background: rgba(236,72,153,.1); color: #f472b6; border-color: rgba(236,72,153,.3); }
+    .tag-inc  { background: rgba(234,179,8,.1); color: #fbbf24; border-color: rgba(234,179,8,.3); }
+
+    .error-msg { background: rgba(220,80,80,.12); border: 1px solid rgba(220,80,80,.3); border-radius: 10px; padding: .75rem 1rem; color: #f87171; font-size: .85rem; margin-top: .5rem; display: none; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo"><img src="images/logo.png" alt="Logo" /></div>
+    <div>
+      <div class="nav-name">Le Petit Bougiote</div>
+      <div class="nav-sub">Coffee & Burger</div>
+    </div>
+  </div>
+  <a href="index.html" class="nav-back">
+    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    Retour au site
+  </a>
+</nav>
+
+<div class="page-hero">
+  <h1>Commander en ligne</h1>
+  <p>Livraison à domicile · Paiement sécurisé par carte</p>
+</div>
+
+<main class="page">
+  <!-- MENU -->
+  <div class="menu-col">
+    <div class="section-title"><span>🍔</span> Notre carte</div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('burgers', this)">🍔 Burgers</button>
+      <button class="tab" onclick="switchTab('gateaux', this)">🍰 Gâteaux</button>
+      <button class="tab" onclick="switchTab('boissons', this)">☕ Boissons</button>
+      <button class="tab" onclick="switchTab('cote', this)">🍟 À côté</button>
+    </div>
+
+    <div class="menu-grid" id="menu-grid"></div>
+  </div>
+
+  <!-- PANIER -->
+  <div class="cart-col">
+    <div class="cart-box">
+      <div class="section-title"><span>🛒</span> Ma commande</div>
+
+      <div id="cart-empty" class="cart-empty">Ton panier est vide.<br>Ajoute des articles !</div>
+      <div id="cart-items" class="cart-items" style="display:none;"></div>
+
+      <hr class="cart-sep" id="cart-sep" style="display:none;" />
+      <div class="cart-total" id="cart-total" style="display:none;">
+        <span>Total</span>
+        <span class="cart-total-val" id="total-val">0,00 €</span>
+      </div>
+
+      <div class="form-section" id="form-section" style="display:none;">
+        <div>
+          <label class="form-label">Prénom et nom *</label>
+          <input class="form-input" id="f-name" type="text" placeholder="Jean Dupont" />
+        </div>
+        <div>
+          <label class="form-label">Téléphone *</label>
+          <input class="form-input" id="f-phone" type="tel" placeholder="06 XX XX XX XX" />
+        </div>
+        <div>
+          <label class="form-label">Adresse de livraison *</label>
+          <input class="form-input" id="f-address" type="text" placeholder="12 Rue des Fleurs, 34500 Béziers" />
+        </div>
+        <div>
+          <label class="form-label">Note (optionnel)</label>
+          <textarea class="form-textarea" id="f-note" placeholder="Code d'entrée, étage, instructions..."></textarea>
+        </div>
+
+        <div class="error-msg" id="error-msg"></div>
+
+        <button class="btn-order" id="btn-order" onclick="placeOrder()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Payer par carte
+        </button>
+        <p class="stripe-note">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="11" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Paiement 100% sécurisé via Stripe
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const menuData = {
+  burgers: [
+    { id:'classic',  name:'Classic',          price:1090, desc:'Steak haché, salade, tomates, oignons, cornichons, cheddar, sauce burger maison', tag:null },
+    { id:'texan',    name:'Texan',             price:1290, desc:'Steak haché, brioche toastée, bacon croustillant, omelette, salade, cheddar, sauce BBQ', tag:'pop' },
+    { id:'bombay',   name:'Bombay',            price:1190, desc:'Steak haché, brioche, sauce curry, oignons caramélisés, tomates, salade, emmental', tag:'epi' },
+    { id:'cajun',    name:'Cajun',             price:1190, desc:'Steak haché, brioche, épices cajun, poivrons grillés, tomates, cheddar, sauce cajun', tag:null },
+    { id:'chevre',   name:'Chèvre',            price:1290, desc:'Steak haché, brioche, fromage de chèvre, confiture de figues, roquette, noix, miel', tag:'sign' },
+    { id:'alpin',    name:'Alpin',             price:1490, desc:'Steak haché, brioche, bacon, oignons caramélisés, emmental fondu, tomates, mayo artisanale', tag:'chef' },
+    { id:'cesar',    name:'César',             price:1590, desc:'Poulet grillé, brioche, salade romaine, parmesan, sauce césar maison, croutons', tag:null },
+    { id:'salade',   name:'La Belle Salade',   price: 750, desc:'Salade fraîche, tomates cerises, concombres, radis, vinaigrette maison, croutons', tag:'leg' },
+  ],
+  gateaux: [
+    { id:'cheesecake', name:'Cheese Cake',  price:450, desc:'Fait maison, coulis de fruits rouges', tag:null },
+    { id:'layercake',  name:'Layer Cake',   price:450, desc:'Gâteau à étages, crème moelleuse, décoration maison', tag:null },
+    { id:'tiramisu',   name:'Tiramisu',     price:450, desc:'Traditionnel, mascarpone, café, cacao', tag:null },
+    { id:'brownie',    name:'Brownie',      price:350, desc:'Chocolat, noix, fondant à cœur', tag:null },
+    { id:'muffin',     name:'Muffin',       price:250, desc:'Moelleux aux pépites de chocolat', tag:null },
+    { id:'cookie',     name:'Cookie',       price:200, desc:'Artisanal, chocolat noir, croustillant', tag:null },
+    { id:'donut',      name:'Donut',        price:250, desc:'Glacé maison, garnitures variées', tag:null },
+    { id:'browkie',    name:'Browkie',      price:300, desc:'Mi-brownie mi-cookie, le meilleur des deux', tag:null },
+  ],
+  boissons: [
+    { id:'cappuccino',   name:'Cappuccino',      price:280, desc:'Expresso, lait chaud et mousse onctueuse', tag:null },
+    { id:'latte',        name:'Latte Macchiato', price:300, desc:'Lait chaud, mousse et expresso en couches', tag:null },
+    { id:'matcha',       name:'Matcha Latte',    price:350, desc:'Thé matcha japonais, lait vapeur', tag:'tend' },
+    { id:'chocolat',     name:'Chocolat Chaud',  price:300, desc:'Chocolat artisanal, crème fouettée', tag:null },
+    { id:'mokaccino',    name:'Mokaccino',        price:320, desc:'Expresso, chocolat fondu, crème mousseuse', tag:null },
+    { id:'expresso',     name:'Expresso',         price:150, desc:'Café expresso simple ou double', tag:null },
+  ],
+  cote: [
+    { id:'frites', name:'Frites Maison', price:390, desc:'Fraîches, coupées à la main, assaisonnées maison', tag:'inc' },
+  ],
+};
+
+const tagLabels = { pop:'Populaire', chef:'Chef', sign:'Signature', epi:'Épicé', leg:'Léger', tend:'Tendance', inc:'Incontournable' };
+
+let cart = {};
+let currentTab = 'burgers';
+
+function cents(n) {
+  return (n / 100).toFixed(2).replace('.', ',') + ' €';
+}
+
+function switchTab(key, btn) {
+  currentTab = key;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu();
+}
+
+function renderMenu() {
+  const grid = document.getElementById('menu-grid');
+  const items = menuData[currentTab];
+  grid.innerHTML = items.map(item => {
+    const qty = cart[item.id]?.qty || 0;
+    return `
+      <div class="item-card ${qty > 0 ? 'in-cart' : ''}" id="card-${item.id}">
+        <div class="item-name">${item.name}</div>
+        ${item.tag ? `<span class="tag tag-${item.tag}">${tagLabels[item.tag]}</span>` : ''}
+        <div class="item-desc">${item.desc}</div>
+        <div class="item-footer">
+          <div class="item-price">${cents(item.price)}</div>
+          <div class="item-qty">
+            <button class="qty-btn qty-minus" onclick="updateQty('${item.id}', -1)" ${qty === 0 ? 'style="opacity:.3;"' : ''}>−</button>
+            <span class="qty-val">${qty}</span>
+            <button class="qty-btn qty-plus" onclick="updateQty('${item.id}', 1)">+</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateQty(id, delta) {
+  const item = Object.values(menuData).flat().find(i => i.id === id);
+  if (!item) return;
+
+  const current = cart[id]?.qty || 0;
+  const next = Math.max(0, current + delta);
+
+  if (next === 0) delete cart[id];
+  else cart[id] = { ...item, qty: next };
+
+  renderMenu();
+  renderCart();
+}
+
+function renderCart() {
+  const items = Object.values(cart);
+  const isEmpty = items.length === 0;
+  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  document.getElementById('cart-empty').style.display = isEmpty ? '' : 'none';
+  document.getElementById('cart-items').style.display = isEmpty ? 'none' : '';
+  document.getElementById('cart-sep').style.display = isEmpty ? 'none' : '';
+  document.getElementById('cart-total').style.display = isEmpty ? 'none' : '';
+  document.getElementById('form-section').style.display = isEmpty ? 'none' : '';
+
+  document.getElementById('cart-items').innerHTML = items.map(i => `
+    <div class="cart-item">
+      <span class="cart-item-name">${i.name}</span>
+      <span class="cart-item-qty">x${i.qty}</span>
+      <span class="cart-item-price">${cents(i.price * i.qty)}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('total-val').textContent = cents(total);
+}
+
+async function placeOrder() {
+  const name    = document.getElementById('f-name').value.trim();
+  const phone   = document.getElementById('f-phone').value.trim();
+  const address = document.getElementById('f-address').value.trim();
+  const note    = document.getElementById('f-note').value.trim();
+  const errEl   = document.getElementById('error-msg');
+
+  errEl.style.display = 'none';
+
+  if (!name || !phone || !address) {
+    errEl.textContent = 'Merci de remplir ton nom, téléphone et adresse de livraison.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const items = Object.values(cart).map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty }));
+  if (items.length === 0) {
+    errEl.textContent = 'Ton panier est vide.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('btn-order');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Redirection vers le paiement...';
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customer: name, phone, address, items, note }),
+    });
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Erreur inconnue');
+    }
+  } catch (e) {
+    errEl.textContent = 'Erreur lors de la commande : ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Payer par carte`;
+  }
+}
+
+renderMenu();
+renderCart();
+</script>
+</body>
+</html>

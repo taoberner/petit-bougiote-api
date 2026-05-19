@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Connexion — Le Petit Bougiote</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg:     #0C0C0A;
+      --bg2:    #131310;
+      --bg3:    #1A1A17;
+      --border: rgba(255,255,255,.07);
+      --green:  #22C55E;
+      --red:    #EF4444;
+      --text:   #F0EDE6;
+      --muted:  #6B6860;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .logo-icon { font-size: 2.5rem; }
+    .logo-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: .5rem;
+    }
+    .logo-sub {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: .25rem;
+    }
+
+    label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06rem;
+      margin-bottom: .5rem;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .9rem 1rem;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+    input[type="password"]:focus {
+      border-color: rgba(34,197,94,.4);
+    }
+    input[type="password"].error {
+      border-color: rgba(239,68,68,.5);
+    }
+
+    .error-msg {
+      font-size: .82rem;
+      color: var(--red);
+      margin-top: .5rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    .btn-login {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--green);
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .btn-login:active { transform: scale(.98); }
+    .btn-login:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-login:hover:not(:disabled) { background: #16A34A; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">🍔</div>
+    <div class="logo-title">Le Petit Bougiote</div>
+    <div class="logo-sub">Accès dashboard</div>
+  </div>
+
+  <form id="form">
+    <label for="pwd">Mot de passe</label>
+    <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password" autofocus />
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+    <button type="submit" class="btn-login" id="btn">Connexion</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('form');
+  const pwd  = document.getElementById('pwd');
+  const btn  = document.getElementById('btn');
+  const err  = document.getElementById('error');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Connexion…';
+    err.classList.remove('show');
+    pwd.classList.remove('error');
+
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pwd.value }),
+    });
+
+    if (res.ok) {
+      window.location.href = '/dashboard';
+    } else {
+      pwd.classList.add('error');
+      err.classList.add('show');
+      pwd.value = '';
+      pwd.focus();
+      btn.disabled = false;
+      btn.textContent = 'Connexion';
+    }
+  });
+</script>
+</body>
+</html>
