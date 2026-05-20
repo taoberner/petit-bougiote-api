@@ -4,192 +4,313 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Commander — Le Petit Bougiote</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --green: #2D7D59; --green-dark: #1B4D38; --green-light: #3a9e70;
-      --gold: #C8973A; --dark: #0E0E0C; --dark2: #161612; --dark3: #1E1E1A;
-      --cream: #F5F0E8; --cream2: #EDE8DE;
+      --bg:     oklch(11% 0.030 45);
+      --bg-2:   oklch(16% 0.032 45);
+      --bg-3:   oklch(21% 0.035 45);
+      --g:      oklch(47% 0.13 148);
+      --g-hi:   oklch(59% 0.13 148);
+      --a:      oklch(68% 0.15 62);
+      --cream:  oklch(93% 0.022 78);
+      --cream2: oklch(80% 0.018 72);
+      --muted:  oklch(52% 0.014 60);
+      --bd:     oklch(23% 0.028 45);
+      --err:    oklch(62% 0.14 25);
     }
-    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--cream); min-height: 100vh; }
-    a { text-decoration: none; color: inherit; }
+
+    body {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      background: var(--bg); color: var(--cream);
+      min-height: 100vh; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
     img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
 
     /* NAV */
-    .nav { position: sticky; top: 0; z-index: 100; background: rgba(14,14,12,.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,.06); padding: .9rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
-    .nav-brand { display: flex; align-items: center; gap: .6rem; }
-    .nav-logo { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(45,125,89,.5); }
-    .nav-logo img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
-    .nav-name { font-family: 'Playfair Display', serif; font-size: .9rem; color: #fff; }
-    .nav-sub  { font-family: 'Dancing Script', cursive; font-size: .8rem; color: var(--gold); }
-    .nav-back { margin-left: auto; font-size: .85rem; color: rgba(237,232,222,.5); display: flex; align-items: center; gap: .4rem; transition: color .2s; }
-    .nav-back:hover { color: var(--green-light); }
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: oklch(11% 0.030 45 / 0.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--bd);
+      padding: 0.25rem 2rem; display: flex; align-items: center; gap: 1rem;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-brand > div { margin-top: -6px; }
+    .nav-logo { width: 92px; height: 92px; border-radius: 50%; overflow: hidden; flex-shrink: 0; position: relative; top: 8px; }
+    .nav-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .nav-name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 800; font-size: 1.15rem; color: var(--cream); }
+    .nav-sub  { font-family: 'Dancing Script', cursive; font-size: 0.9rem; color: var(--a); display: block; line-height: 1; }
+    .nav-back {
+      margin-left: auto; font-size: 0.8rem; font-style: italic; color: var(--muted);
+      display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--g-hi); }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 3rem 2rem 2rem; text-align: center;
+      border-bottom: 1px solid var(--bd);
+      background: var(--bg-2);
+    }
+    .page-hero h1 {
+      font-family: 'Big Shoulders Display', sans-serif; font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3rem); line-height: 0.9; letter-spacing: -0.02em; color: var(--cream);
+    }
+    .page-hero h1 span { color: var(--a); }
+    .page-hero p { color: var(--muted); margin-top: 0.6rem; font-size: 0.85rem; font-style: italic; }
 
     /* LAYOUT */
-    .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
-    @media(max-width: 800px) { .page { grid-template-columns: 1fr; } }
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 5rem; display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+    @media (max-width: 800px) { .page { grid-template-columns: 1fr; } }
 
     /* SECTION TITLE */
-    .section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .5rem; }
-    .section-title span { font-size: 1.3rem; }
+    .sec-title { font-family: 'Big Shoulders Display', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--cream); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; letter-spacing: -0.01em; }
+
+    /* STUDENT BANNER */
+    .student-banner {
+      display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;
+      padding: 0.65rem 1rem; margin-bottom: 1.25rem;
+      background: oklch(18% 0.04 62 / 0.55);
+      border: 1px solid oklch(45% 0.12 62 / 0.45);
+      border-radius: 6px;
+    }
+    .student-badge {
+      font-family: 'Big Shoulders Display', sans-serif; font-weight: 800;
+      font-size: 0.85rem; color: var(--a); background: oklch(28% 0.06 62 / 0.6);
+      padding: 0.15rem 0.6rem; border-radius: 4px; white-space: nowrap;
+    }
+    .student-banner-txt { font-size: 0.78rem; font-style: italic; color: var(--cream2); }
 
     /* TABS */
-    .tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
-    .tab { padding: .5rem 1.1rem; border-radius: 50px; font-size: .82rem; font-weight: 600; cursor: pointer; border: 2px solid rgba(45,125,89,.35); background: transparent; color: var(--cream2); transition: all .25s; white-space: nowrap; }
-    .tab:hover { border-color: var(--green); color: var(--green); }
-    .tab.active { background: var(--green); border-color: var(--green); color: #fff; }
+    .tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .tab {
+      padding: 0.5rem 1.1rem; border-radius: 4px; font-size: 0.78rem; font-style: italic;
+      cursor: pointer; border: 1px solid var(--bd); background: transparent; color: var(--cream2);
+      font-family: 'Libre Baskerville', serif;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .tab:hover { border-color: var(--g); color: var(--g-hi); }
+    .tab.active { background: var(--g); border-color: var(--g); color: var(--cream); font-style: normal; font-weight: 700; }
+
+    /* Menu note (formulé menu +3€) */
+    .menu-note {
+      font-size: 0.75rem; font-style: italic; color: var(--muted);
+      margin-bottom: 1rem; padding: 0.5rem 0.85rem;
+      border-left: 2px solid var(--bd);
+    }
 
     /* MENU ITEMS */
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
     .item-card {
-      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
-      border-radius: 14px; padding: 1rem; cursor: pointer;
-      transition: all .25s; display: flex; flex-direction: column; gap: .5rem;
-      position: relative;
+      background: var(--bg-2); border: 1px solid var(--bd); border-radius: 6px;
+      padding: 1.1rem; cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; gap: 0.5rem;
     }
-    .item-card:hover { border-color: rgba(45,125,89,.4); transform: translateY(-2px); }
-    .item-card.in-cart { border-color: var(--green); background: rgba(45,125,89,.08); }
-    .item-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #fff; }
-    .item-desc { font-size: .78rem; color: rgba(237,232,222,.5); line-height: 1.5; }
-    .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: .5rem; }
-    .item-price { color: var(--gold); font-weight: 700; font-size: .95rem; }
-    .item-qty { display: flex; align-items: center; gap: .4rem; }
+    .item-card:hover { border-color: oklch(47% 0.13 148 / 0.5); transform: translateY(-2px); }
+    .item-card.in-cart { border-color: var(--g); background: oklch(17% 0.015 148); }
+    .item-name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 800; font-size: 1rem; color: var(--cream); letter-spacing: -0.01em; }
+    .item-desc { font-size: 0.77rem; font-style: italic; color: var(--muted); line-height: 1.55; }
+    .item-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 0.6rem; }
+    .item-price { color: var(--a); font-weight: 700; font-family: 'Big Shoulders Display', sans-serif; font-size: 1.05rem; }
+    .item-qty { display: flex; align-items: center; gap: 0.45rem; }
     .qty-btn {
-      width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer;
-      font-size: 1.1rem; font-weight: 700; line-height: 1;
-      display: flex; align-items: center; justify-content: center;
-      transition: all .2s;
+      width: 28px; height: 28px; border-radius: 4px; border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; line-height: 1;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
-    .qty-minus { background: rgba(255,255,255,.08); color: var(--cream2); }
-    .qty-minus:hover { background: rgba(220,80,80,.2); color: #f87171; }
-    .qty-plus  { background: var(--green); color: #fff; }
-    .qty-plus:hover  { background: var(--green-light); }
-    .qty-val { font-weight: 700; min-width: 18px; text-align: center; color: #fff; font-size: .9rem; }
+    .qty-minus { background: var(--bg-3); color: var(--cream2); }
+    .qty-minus:hover { background: oklch(30% 0.08 25); color: oklch(75% 0.1 25); }
+    .qty-plus  { background: var(--g); color: var(--cream); }
+    .qty-plus:hover { background: var(--g-hi); }
+    .qty-val { font-weight: 700; min-width: 18px; text-align: center; color: var(--cream); font-size: 0.9rem; }
 
-    /* CART / COMMANDE */
+    /* TAG BADGES */
+    .tag { display: inline-block; font-size: 0.65rem; font-style: italic; padding: 0.12rem 0.55rem; border-radius: 100px; border: 1px solid; margin-top: 0.2rem; }
+    .tag-pop  { background: oklch(47% 0.13 148 / 0.12); color: var(--g-hi); border-color: oklch(47% 0.13 148 / 0.35); }
+    .tag-chef { background: oklch(68% 0.15 62 / 0.1);  color: var(--a);   border-color: oklch(68% 0.15 62 / 0.35); }
+    .tag-sign { background: oklch(55% 0.12 300 / 0.1); color: oklch(65% 0.12 300); border-color: oklch(55% 0.12 300 / 0.35); }
+    .tag-epi  { background: oklch(60% 0.14 45 / 0.1);  color: oklch(70% 0.14 45);  border-color: oklch(60% 0.14 45 / 0.35); }
+    .tag-leg  { background: oklch(60% 0.12 220 / 0.1); color: oklch(70% 0.12 220); border-color: oklch(60% 0.12 220 / 0.35); }
+    .tag-tend { background: oklch(60% 0.13 330 / 0.1); color: oklch(70% 0.13 330); border-color: oklch(60% 0.13 330 / 0.35); }
+    .tag-inc  { background: oklch(68% 0.15 62 / 0.1);  color: var(--a);   border-color: oklch(68% 0.15 62 / 0.35); }
+
+    /* CART */
     .cart-box {
-      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
-      border-radius: 18px; padding: 1.5rem; position: sticky; top: 80px;
+      background: var(--bg-2); border: 1px solid var(--bd);
+      border-radius: 8px; padding: 1.75rem; position: sticky; top: 80px;
     }
-    .cart-empty { text-align: center; color: rgba(237,232,222,.35); font-size: .875rem; padding: 2rem 0; }
-    .cart-items { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.25rem; }
-    .cart-item { display: flex; align-items: center; justify-content: space-between; font-size: .875rem; }
-    .cart-item-name { color: var(--cream2); flex: 1; }
-    .cart-item-qty  { color: rgba(237,232,222,.45); margin: 0 .75rem; }
-    .cart-item-price { color: var(--gold); font-weight: 600; }
-    .cart-sep { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: .5rem 0; }
-    .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; }
-    .cart-total-val { color: var(--gold); font-family: 'Playfair Display', serif; }
+    .cart-empty { text-align: center; color: var(--muted); font-size: 0.85rem; font-style: italic; padding: 2rem 0; line-height: 1.7; }
+    .cart-items { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .cart-item { display: flex; align-items: center; font-size: 0.85rem; }
+    .cart-item-name { color: var(--cream2); flex: 1; font-style: italic; }
+    .cart-item-qty  { color: var(--muted); margin: 0 0.75rem; }
+    .cart-item-price { color: var(--a); font-weight: 700; font-family: 'Big Shoulders Display', sans-serif; font-size: 0.95rem; }
+    .cart-sep { border: none; border-top: 1px solid var(--bd); margin: 0.5rem 0; }
+
+    /* Totaux */
+    .cart-subtotal { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); font-style: italic; margin-bottom: 0.3rem; }
+    .cart-discount { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--g-hi); font-style: italic; margin-bottom: 0.3rem; }
+    .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; }
+    .cart-total-lbl { font-style: italic; color: var(--cream2); }
+    .cart-total-val { color: var(--a); font-family: 'Big Shoulders Display', sans-serif; font-size: 1.3rem; }
 
     /* FORM */
-    .form-section { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
-    .form-label { font-size: .78rem; font-weight: 600; color: rgba(237,232,222,.5); text-transform: uppercase; letter-spacing: .05rem; margin-bottom: .25rem; display: block; }
+    .form-sec { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
+    .form-lbl { font-size: 0.7rem; font-style: italic; font-weight: 400; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; display: block; }
     .form-input, .form-textarea {
-      width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
-      border-radius: 10px; padding: .75rem 1rem; color: var(--cream);
-      font-family: 'Inter', sans-serif; font-size: .9rem;
-      outline: none; transition: border-color .2s;
+      width: 100%; background: var(--bg-3); border: 1px solid var(--bd);
+      border-radius: 6px; padding: 0.75rem 1rem; color: var(--cream);
+      font-family: 'Libre Baskerville', serif; font-size: 0.88rem; font-style: italic;
+      outline: none; transition: border-color 0.2s;
     }
-    .form-input:focus, .form-textarea:focus { border-color: var(--green); }
+    .form-input:focus, .form-textarea:focus { border-color: var(--g); }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
     .form-textarea { resize: vertical; min-height: 70px; }
 
-    /* SUBMIT */
+    /* Checkbox étudiant */
+    .student-check {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      background: oklch(18% 0.04 62 / 0.35);
+      border: 1px solid oklch(45% 0.12 62 / 0.35);
+      border-radius: 6px; cursor: pointer;
+    }
+    .student-check input[type="checkbox"] {
+      width: 16px; height: 16px; accent-color: var(--a); cursor: pointer; flex-shrink: 0;
+    }
+    .student-check-lbl { font-size: 0.82rem; font-style: italic; color: var(--cream2); line-height: 1.4; cursor: pointer; }
+    .student-check-lbl strong { color: var(--a); font-style: normal; }
+
+    /* ORDER BUTTON */
     .btn-order {
       width: 100%; margin-top: 1rem; padding: 1rem;
-      background: var(--green); color: #fff; border: none; border-radius: 12px;
-      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
-      cursor: pointer; transition: all .25s; display: flex; align-items: center; justify-content: center; gap: .5rem;
+      background: var(--g); color: var(--cream); border: none; border-radius: 6px;
+      font-family: 'Big Shoulders Display', sans-serif; font-size: 1.1rem; font-weight: 900; letter-spacing: 0.01em;
+      cursor: pointer; transition: background 0.2s, transform 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     }
-    .btn-order:hover { background: var(--green-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(45,125,89,.4); }
-    .btn-order:disabled { background: rgba(255,255,255,.1); color: rgba(255,255,255,.3); cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-order:hover { background: var(--g-hi); transform: translateY(-2px); }
+    .btn-order:disabled { background: var(--bg-3); color: var(--muted); cursor: not-allowed; transform: none; }
 
-    .stripe-note { text-align: center; color: rgba(237,232,222,.3); font-size: .75rem; margin-top: .75rem; display: flex; align-items: center; justify-content: center; gap: .3rem; }
+    .stripe-note {
+      text-align: center; color: var(--muted); font-size: 0.72rem; font-style: italic;
+      margin-top: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+    }
 
-    /* HERO */
-    .page-hero { text-align: center; padding: 2.5rem 1.5rem 1.5rem; }
-    .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff; }
-    .page-hero p { color: rgba(237,232,222,.55); margin-top: .5rem; font-size: .9rem; }
+    .error-msg {
+      background: oklch(18% 0.06 25); border: 1px solid oklch(40% 0.1 25);
+      border-radius: 6px; padding: 0.75rem 1rem;
+      color: oklch(75% 0.12 25); font-size: 0.83rem; font-style: italic;
+      margin-top: 0.5rem; display: none;
+    }
 
-    .tag { display: inline-block; font-size: .68rem; font-weight: 600; padding: .15rem .6rem; border-radius: 50px; border: 1px solid; margin-top: .25rem; }
-    .tag-pop  { background: rgba(45,125,89,.15); color: #3a9e70; border-color: rgba(45,125,89,.4); }
-    .tag-chef { background: rgba(200,151,58,.12); color: var(--gold); border-color: rgba(200,151,58,.4); }
-    .tag-sign { background: rgba(155,108,216,.12); color: #b78ae0; border-color: rgba(155,108,216,.4); }
-    .tag-epi  { background: rgba(234,88,12,.1); color: #f97316; border-color: rgba(234,88,12,.3); }
-    .tag-leg  { background: rgba(14,165,233,.1); color: #38bdf8; border-color: rgba(14,165,233,.3); }
-    .tag-tend { background: rgba(236,72,153,.1); color: #f472b6; border-color: rgba(236,72,153,.3); }
-    .tag-inc  { background: rgba(234,179,8,.1); color: #fbbf24; border-color: rgba(234,179,8,.3); }
-
-    .error-msg { background: rgba(220,80,80,.12); border: 1px solid rgba(220,80,80,.3); border-radius: 10px; padding: .75rem 1rem; color: #f87171; font-size: .85rem; margin-top: .5rem; display: none; }
+    .form-divider { width: 100%; height: 1px; background: var(--bd); margin: 0.25rem 0; }
   </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-brand">
-    <div class="nav-logo"><img src="images/logo.png" alt="Logo" /></div>
+    <div class="nav-logo"><img src="images/logo.png" alt="Logo Le Petit Bougiote" /></div>
     <div>
       <div class="nav-name">Le Petit Bougiote</div>
-      <div class="nav-sub">Coffee & Burger</div>
+      <span class="nav-sub">Coffee &amp; Burger</span>
     </div>
   </div>
   <a href="index.html" class="nav-back">
-    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
     Retour au site
   </a>
 </nav>
 
 <div class="page-hero">
-  <h1>Commander en ligne</h1>
-  <p>Livraison à domicile · Paiement sécurisé par carte</p>
+  <h1>Commander <span>en ligne</span></h1>
+  <p>Livraison à domicile &middot; Paiement sécurisé par carte</p>
 </div>
 
 <main class="page">
   <!-- MENU -->
-  <div class="menu-col">
-    <div class="section-title"><span>🍔</span> Notre carte</div>
+  <div>
+    <div class="sec-title">Notre carte</div>
 
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('burgers', this)">🍔 Burgers</button>
-      <button class="tab" onclick="switchTab('gateaux', this)">🍰 Gâteaux</button>
-      <button class="tab" onclick="switchTab('boissons', this)">☕ Boissons</button>
-      <button class="tab" onclick="switchTab('cote', this)">🍟 À côté</button>
+    <!-- Bandeau remise étudiants -->
+    <div class="student-banner">
+      <span class="student-badge">−10% étudiants</span>
+      <span class="student-banner-txt">Cochez la case dans votre panier &mdash; remise appliquée à la commande</span>
     </div>
 
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('burgers', this)">Burgers</button>
+      <button class="tab" onclick="switchTab('salades', this)">Salades</button>
+      <button class="tab" onclick="switchTab('cote', this)">À côté</button>
+      <button class="tab" onclick="switchTab('desserts', this)">Desserts</button>
+      <button class="tab" onclick="switchTab('boissons', this)">Boissons</button>
+      <button class="tab" onclick="switchTab('smoothies', this)">Smoothies</button>
+    </div>
+
+    <div class="menu-note" id="menu-note"></div>
     <div class="menu-grid" id="menu-grid"></div>
   </div>
 
   <!-- PANIER -->
-  <div class="cart-col">
+  <div>
     <div class="cart-box">
-      <div class="section-title"><span>🛒</span> Ma commande</div>
+      <div class="sec-title">Ma commande</div>
 
-      <div id="cart-empty" class="cart-empty">Ton panier est vide.<br>Ajoute des articles !</div>
+      <div id="cart-empty" class="cart-empty">Ton panier est vide.<br>Ajoute des articles pour commander.</div>
       <div id="cart-items" class="cart-items" style="display:none;"></div>
 
       <hr class="cart-sep" id="cart-sep" style="display:none;" />
-      <div class="cart-total" id="cart-total" style="display:none;">
-        <span>Total</span>
-        <span class="cart-total-val" id="total-val">0,00 €</span>
+      <div id="cart-totals" style="display:none;">
+        <div class="cart-subtotal" id="cart-subtotal-row" style="display:none;">
+          <span>Sous-total</span>
+          <span id="subtotal-val">0,00 €</span>
+        </div>
+        <div class="cart-discount" id="cart-discount-row" style="display:none;">
+          <span>Remise étudiants (−10%)</span>
+          <span id="discount-val"></span>
+        </div>
+        <div class="cart-total">
+          <span class="cart-total-lbl">Total</span>
+          <span class="cart-total-val" id="total-val">0,00 €</span>
+        </div>
       </div>
 
-      <div class="form-section" id="form-section" style="display:none;">
+      <div class="form-sec" id="form-sec" style="display:none;">
+        <div class="form-divider"></div>
+
+        <!-- Remise étudiants -->
+        <label class="student-check">
+          <input type="checkbox" id="student-cb" onchange="renderCart()" />
+          <span class="student-check-lbl">Je suis étudiant(e) &mdash; <strong>−10% sur ma commande</strong><br><span style="font-size:0.73rem;color:var(--muted);">Présentez votre carte lors de la livraison</span></span>
+        </label>
+
         <div>
-          <label class="form-label">Prénom et nom *</label>
+          <label class="form-lbl">Prénom et nom *</label>
           <input class="form-input" id="f-name" type="text" placeholder="Jean Dupont" />
         </div>
         <div>
-          <label class="form-label">Téléphone *</label>
+          <label class="form-lbl">Téléphone *</label>
           <input class="form-input" id="f-phone" type="tel" placeholder="06 XX XX XX XX" />
         </div>
         <div>
-          <label class="form-label">Adresse de livraison *</label>
+          <label class="form-lbl">Adresse de livraison *</label>
           <input class="form-input" id="f-address" type="text" placeholder="12 Rue des Fleurs, 34500 Béziers" />
         </div>
         <div>
-          <label class="form-label">Note (optionnel)</label>
+          <label class="form-lbl">Note (optionnel)</label>
           <textarea class="form-textarea" id="f-note" placeholder="Code d'entrée, étage, instructions..."></textarea>
         </div>
 
@@ -200,7 +321,7 @@
           Payer par carte
         </button>
         <p class="stripe-note">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="11" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="11" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Paiement 100% sécurisé via Stripe
         </p>
       </div>
@@ -211,36 +332,63 @@
 <script>
 const menuData = {
   burgers: [
-    { id:'classic',  name:'Classic',          price:1090, desc:'Steak haché, salade, tomates, oignons, cornichons, cheddar, sauce burger maison', tag:null },
-    { id:'texan',    name:'Texan',             price:1290, desc:'Steak haché, brioche toastée, bacon croustillant, omelette, salade, cheddar, sauce BBQ', tag:'pop' },
-    { id:'bombay',   name:'Bombay',            price:1190, desc:'Steak haché, brioche, sauce curry, oignons caramélisés, tomates, salade, emmental', tag:'epi' },
-    { id:'cajun',    name:'Cajun',             price:1190, desc:'Steak haché, brioche, épices cajun, poivrons grillés, tomates, cheddar, sauce cajun', tag:null },
-    { id:'chevre',   name:'Chèvre',            price:1290, desc:'Steak haché, brioche, fromage de chèvre, confiture de figues, roquette, noix, miel', tag:'sign' },
-    { id:'alpin',    name:'Alpin',             price:1490, desc:'Steak haché, brioche, bacon, oignons caramélisés, emmental fondu, tomates, mayo artisanale', tag:'chef' },
-    { id:'cesar',    name:'César',             price:1590, desc:'Poulet grillé, brioche, salade romaine, parmesan, sauce césar maison, croutons', tag:null },
-    { id:'salade',   name:'La Belle Salade',   price: 750, desc:'Salade fraîche, tomates cerises, concombres, radis, vinaigrette maison, croutons', tag:'leg' },
+    { id:'alpin',   name:'Alpin',    price:1290, desc:'Bœuf, crousti, reblochon, salade, tomates, composée d\'oignons, sauce tartare', tag:'chef' },
+    { id:'magret',  name:'Magret',   price:1490, desc:'Magret de canard, brebis, roquette, tomates confites, composée d\'oignons, sauce poivre', tag:'sign' },
+    { id:'chevre',  name:'Chèvre',   price:1290, desc:'Bœuf, fromage de chèvre, roquette, tomates confites, oignons frits, noix, miel', tag:'sign' },
+    { id:'texan',   name:'Texan',    price:1290, desc:'Bœuf, bacon, cheddar fumé, salade, tomates, oignons frits, sauce barbecue', tag:'pop' },
+    { id:'classic', name:'Classic',  price:1090, desc:'Bœuf, comté, salade, tomates, oignons rouges, sauce biggy', tag:null },
+    { id:'bombay',  name:'Bombay',   price:1190, desc:'Poulet mariné, cheddar épicé, salade, tomates, oignons rouges, sauce mayo épicée', tag:'epi' },
+    { id:'cajun',   name:'Cajun',    price:1190, desc:'Poulet cajun, comté, salade, tomates, oignons rouges, sauce mayo cajun', tag:'epi' },
+    { id:'veggie',  name:'Veggie',   price:1290, desc:'Aubergine, tomates confites, roquette, chèvre, noix, sauce tartare', tag:'leg' },
+    { id:'cheese',  name:'Cheese',   price: 890, desc:'Bœuf, cheddar, sauce biggy', tag:null },
+    { id:'chiken',  name:'Chiken',   price: 890, desc:'Poulet, cheddar, mayo', tag:null },
   ],
-  gateaux: [
-    { id:'cheesecake', name:'Cheese Cake',  price:450, desc:'Fait maison, coulis de fruits rouges', tag:null },
-    { id:'layercake',  name:'Layer Cake',   price:450, desc:'Gâteau à étages, crème moelleuse, décoration maison', tag:null },
-    { id:'tiramisu',   name:'Tiramisu',     price:450, desc:'Traditionnel, mascarpone, café, cacao', tag:null },
-    { id:'brownie',    name:'Brownie',      price:350, desc:'Chocolat, noix, fondant à cœur', tag:null },
-    { id:'muffin',     name:'Muffin',       price:250, desc:'Moelleux aux pépites de chocolat', tag:null },
-    { id:'cookie',     name:'Cookie',       price:200, desc:'Artisanal, chocolat noir, croustillant', tag:null },
-    { id:'donut',      name:'Donut',        price:250, desc:'Glacé maison, garnitures variées', tag:null },
-    { id:'browkie',    name:'Browkie',      price:300, desc:'Mi-brownie mi-cookie, le meilleur des deux', tag:null },
-  ],
-  boissons: [
-    { id:'cappuccino',   name:'Cappuccino',      price:280, desc:'Expresso, lait chaud et mousse onctueuse', tag:null },
-    { id:'latte',        name:'Latte Macchiato', price:300, desc:'Lait chaud, mousse et expresso en couches', tag:null },
-    { id:'matcha',       name:'Matcha Latte',    price:350, desc:'Thé matcha japonais, lait vapeur', tag:'tend' },
-    { id:'chocolat',     name:'Chocolat Chaud',  price:300, desc:'Chocolat artisanal, crème fouettée', tag:null },
-    { id:'mokaccino',    name:'Mokaccino',        price:320, desc:'Expresso, chocolat fondu, crème mousseuse', tag:null },
-    { id:'expresso',     name:'Expresso',         price:150, desc:'Café expresso simple ou double', tag:null },
+  salades: [
+    { id:'ceasar',   name:'César',          price:1090, desc:'Iceberg, croutons, poulet, copeaux de parmesan, oignon frit, sauce cesar', tag:'pop' },
+    { id:'medit',    name:'Médit',          price:1090, desc:'Roquette, aubergine, feta, groseilles, noix, vinaigre basilic', tag:'leg' },
+    { id:'petitsal', name:'Petite Salade',  price: 150, desc:'Salade fraîche, tomates, oignons frits', tag:null },
   ],
   cote: [
-    { id:'frites', name:'Frites Maison', price:390, desc:'Fraîches, coupées à la main, assaisonnées maison', tag:'inc' },
+    { id:'frites',   name:'Frites Maison',  price: 300, desc:'Frites fraîches, coupées à la main, assaisonnées maison', tag:'inc' },
   ],
+  desserts: [
+    { id:'cookie',     name:'Cookie',        price: 240, desc:'Artisanal, chocolat noir, croustillant', tag:null },
+    { id:'muffin',     name:'Muffin',        price: 240, desc:'Moelleux aux pépites de chocolat', tag:null },
+    { id:'donut',      name:'Donut',         price: 240, desc:'Glacé maison, garnitures variées', tag:null },
+    { id:'brownie',    name:'Brownie',        price: 280, desc:'Chocolat fondant, noix maison', tag:null },
+    { id:'cheesecake', name:'Cheese Cake',   price: 430, desc:'Fait maison, coulis de fruits rouges', tag:'chef' },
+    { id:'layercake',  name:'Layer Cake',    price: 430, desc:'Gâteau à étages, crème moelleuse, décoration maison', tag:null },
+    { id:'tiramisu',   name:'Tiramisu',      price: 430, desc:'Traditionnel, mascarpone, café, cacao', tag:null },
+  ],
+  boissons: [
+    { id:'expresso',   name:'Expresso',         price: 150, desc:'Café expresso simple ou double', tag:null },
+    { id:'eau',        name:'Eau',              price: 100, desc:'Eau plate', tag:null },
+    { id:'eau-g',      name:'Eau Gazeuse',      price: 150, desc:'Eau pétillante', tag:null },
+    { id:'soda',       name:'Soda',             price: 200, desc:'Coca, Fanta, Sprite...', tag:null },
+    { id:'jus',        name:'Jus de Fruit',     price: 250, desc:'Jus de fruits frais', tag:null },
+    { id:'biere-na',   name:'Bière Sans Alcool',price: 300, desc:'Bière artisanale sans alcool', tag:null },
+    { id:'cappuccino', name:'Cappuccino',        price: 400, desc:'Expresso, lait chaud et mousse onctueuse', tag:'tend' },
+    { id:'latte',      name:'Latte Macchiato',  price: 400, desc:'Lait chaud, mousse et expresso en couches', tag:null },
+    { id:'matcha',     name:'Matcha Latte',     price: 400, desc:'Thé matcha japonais, lait vapeur', tag:'tend' },
+    { id:'chocolat',   name:'Chocolat Chaud',   price: 400, desc:'Chocolat artisanal, crème fouettée', tag:null },
+    { id:'mokaccino',  name:'Mokaccino',        price: 400, desc:'Expresso, chocolat fondu, crème mousseuse', tag:null },
+  ],
+  smoothies: [
+    { id:'sm-mangue', name:'Mangue Ananas',      price: 450, desc:'Mangue fraîche, ananas, banane, lait de coco', tag:'tend' },
+    { id:'sm-fraise', name:'Fraise Framboise',   price: 450, desc:'Fraise, framboise, myrtille, yaourt nature', tag:'pop' },
+    { id:'sm-banane', name:'Banane Cacao',        price: 450, desc:'Banane, cacao, lait d\'amande, miel', tag:null },
+    { id:'sm-vert',   name:'Vert Détox',          price: 450, desc:'Épinard, concombre, pomme, citron, gingembre', tag:'leg' },
+    { id:'sm-peche',  name:'Pêche Abricot',       price: 400, desc:'Pêche, abricot, orange, miel', tag:null },
+  ],
+};
+
+const menuNotes = {
+  burgers: 'Formule Menu : ajoutez frites + petite salade pour +3,00 €',
+  salades: '−10% étudiants applicables',
+  cote: '',
+  desserts: 'Gourmandises à partir de 2,40 € · Dessert assiette à partir de 4,30 €',
+  boissons: 'Recettes classiques à partir de 1,50 € · Recettes gourmandes à partir de 4,00 €',
+  smoothies: 'Smoothies frais préparés à la commande',
 };
 
 const tagLabels = { pop:'Populaire', chef:'Chef', sign:'Signature', epi:'Épicé', leg:'Léger', tend:'Tendance', inc:'Incontournable' };
@@ -248,8 +396,15 @@ const tagLabels = { pop:'Populaire', chef:'Chef', sign:'Signature', epi:'Épicé
 let cart = {};
 let currentTab = 'burgers';
 
-function cents(n) {
-  return (n / 100).toFixed(2).replace('.', ',') + ' €';
+function cents(n) { return (n / 100).toFixed(2).replace('.', ',') + ' €'; }
+
+function isStudent() {
+  const cb = document.getElementById('student-cb');
+  return cb && cb.checked;
+}
+
+function discountedPrice(p) {
+  return isStudent() ? Math.round(p * 0.9) : p;
 }
 
 function switchTab(key, btn) {
@@ -261,7 +416,13 @@ function switchTab(key, btn) {
 
 function renderMenu() {
   const grid = document.getElementById('menu-grid');
+  const noteEl = document.getElementById('menu-note');
   const items = menuData[currentTab];
+  const note = menuNotes[currentTab];
+
+  noteEl.textContent = note || '';
+  noteEl.style.display = note ? '' : 'none';
+
   grid.innerHTML = items.map(item => {
     const qty = cart[item.id]?.qty || 0;
     return `
@@ -269,29 +430,25 @@ function renderMenu() {
         <div class="item-name">${item.name}</div>
         ${item.tag ? `<span class="tag tag-${item.tag}">${tagLabels[item.tag]}</span>` : ''}
         <div class="item-desc">${item.desc}</div>
-        <div class="item-footer">
+        <div class="item-foot">
           <div class="item-price">${cents(item.price)}</div>
           <div class="item-qty">
-            <button class="qty-btn qty-minus" onclick="updateQty('${item.id}', -1)" ${qty === 0 ? 'style="opacity:.3;"' : ''}>−</button>
+            <button class="qty-btn qty-minus" onclick="updateQty('${item.id}', -1)" ${qty === 0 ? 'style="opacity:.35;"' : ''}>−</button>
             <span class="qty-val">${qty}</span>
             <button class="qty-btn qty-plus" onclick="updateQty('${item.id}', 1)">+</button>
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
 function updateQty(id, delta) {
   const item = Object.values(menuData).flat().find(i => i.id === id);
   if (!item) return;
-
   const current = cart[id]?.qty || 0;
   const next = Math.max(0, current + delta);
-
   if (next === 0) delete cart[id];
   else cart[id] = { ...item, qty: next };
-
   renderMenu();
   renderCart();
 }
@@ -299,21 +456,36 @@ function updateQty(id, delta) {
 function renderCart() {
   const items = Object.values(cart);
   const isEmpty = items.length === 0;
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const student = isStudent();
+  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const discount = student ? Math.round(subtotal * 0.1) : 0;
+  const total = subtotal - discount;
 
-  document.getElementById('cart-empty').style.display = isEmpty ? '' : 'none';
-  document.getElementById('cart-items').style.display = isEmpty ? 'none' : '';
-  document.getElementById('cart-sep').style.display = isEmpty ? 'none' : '';
-  document.getElementById('cart-total').style.display = isEmpty ? 'none' : '';
-  document.getElementById('form-section').style.display = isEmpty ? 'none' : '';
+  document.getElementById('cart-empty').style.display  = isEmpty ? '' : 'none';
+  document.getElementById('cart-items').style.display  = isEmpty ? 'none' : '';
+  document.getElementById('cart-sep').style.display    = isEmpty ? 'none' : '';
+  document.getElementById('cart-totals').style.display = isEmpty ? 'none' : '';
+  document.getElementById('form-sec').style.display    = isEmpty ? 'none' : '';
 
   document.getElementById('cart-items').innerHTML = items.map(i => `
     <div class="cart-item">
       <span class="cart-item-name">${i.name}</span>
       <span class="cart-item-qty">x${i.qty}</span>
       <span class="cart-item-price">${cents(i.price * i.qty)}</span>
-    </div>
-  `).join('');
+    </div>`).join('');
+
+  const subtotalRow = document.getElementById('cart-subtotal-row');
+  const discountRow = document.getElementById('cart-discount-row');
+
+  if (student && discount > 0) {
+    subtotalRow.style.display = '';
+    discountRow.style.display = '';
+    document.getElementById('subtotal-val').textContent = cents(subtotal);
+    document.getElementById('discount-val').textContent = '−' + cents(discount);
+  } else {
+    subtotalRow.style.display = 'none';
+    discountRow.style.display = 'none';
+  }
 
   document.getElementById('total-val').textContent = cents(total);
 }
@@ -324,6 +496,7 @@ async function placeOrder() {
   const address = document.getElementById('f-address').value.trim();
   const note    = document.getElementById('f-note').value.trim();
   const errEl   = document.getElementById('error-msg');
+  const student = isStudent();
 
   errEl.style.display = 'none';
 
@@ -333,22 +506,33 @@ async function placeOrder() {
     return;
   }
 
-  const items = Object.values(cart).map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty }));
-  if (items.length === 0) {
+  const rawItems = Object.values(cart);
+  if (rawItems.length === 0) {
     errEl.textContent = 'Ton panier est vide.';
     errEl.style.display = 'block';
     return;
   }
 
+  const items = rawItems.map(i => ({
+    id: i.id,
+    name: i.name,
+    price: student ? Math.round(i.price * 0.9) : i.price,
+    qty: i.qty,
+  }));
+
+  const noteWithStudent = student
+    ? (note ? note + '\n[REMISE ÉTUDIANT −10%]' : '[REMISE ÉTUDIANT −10%]')
+    : note;
+
   const btn = document.getElementById('btn-order');
   btn.disabled = true;
-  btn.innerHTML = '⏳ Redirection vers le paiement...';
+  btn.innerHTML = '&#9203; Redirection vers le paiement...';
 
   try {
     const res = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customer: name, phone, address, items, note }),
+      body: JSON.stringify({ customer: name, phone, address, items, note: noteWithStudent }),
     });
     const data = await res.json();
 
@@ -372,12 +556,10 @@ async function checkOpen() {
     if (!data.open) {
       const btn = document.getElementById('btn-order');
       btn.disabled = true;
-      btn.textContent = '🔴 Commandes fermées pour le moment';
-
+      btn.textContent = 'Commandes fermées pour le moment';
       const errEl = document.getElementById('error-msg');
-      errEl.textContent = 'Le restaurant est actuellement fermé. Les commandes en ligne ne sont pas disponibles pour l\'instant.';
+      errEl.textContent = "Le restaurant est actuellement fermé. Les commandes en ligne ne sont pas disponibles pour l'instant.";
       errEl.style.display = 'block';
-      errEl.style.color = '#EF4444';
     }
   } catch(e) {}
 }

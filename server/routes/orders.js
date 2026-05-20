@@ -14,7 +14,7 @@ function broadcastOrder(order) {
 }
 
 // SSE — dashboard iPad s'abonne ici
-router.get('/events', (req, res) => {
+router.get('/events', async (req, res) => {
   res.set({
     'Content-Type':      'text/event-stream',
     'Cache-Control':     'no-cache',
@@ -26,7 +26,8 @@ router.get('/events', (req, res) => {
   sseClients.add(res);
 
   // Envoyer les commandes "paid" existantes dès la connexion
-  db.listByStatus('paid').forEach(o => {
+  const paid = await db.listByStatus('paid');
+  paid.forEach(o => {
     res.write(`data: ${JSON.stringify(formatOrder(o))}\n\n`);
   });
 
@@ -44,7 +45,8 @@ router.get('/events', (req, res) => {
 // Créer une commande + session Stripe Checkout
 router.post('/', async (req, res) => {
   try {
-    if (!db.status.get().open) {
+    const restaurantOpen = await db.status.get();
+    if (!restaurantOpen.open) {
       return res.status(503).json({ error: 'Le restaurant est actuellement fermé. Les commandes ne sont pas acceptées.' });
     }
 
@@ -73,7 +75,7 @@ router.post('/', async (req, res) => {
       cancel_url:  `${process.env.BASE_URL}/le-petit-bougiote/commander.html`,
     });
 
-    db.insert({
+    await db.insert({
       id: orderId,
       status: 'pending',
       customer, phone, address,
@@ -92,19 +94,20 @@ router.post('/', async (req, res) => {
 });
 
 // Lister toutes les commandes (dashboard)
-router.get('/', (req, res) => {
-  res.json(db.list().map(formatOrder));
+router.get('/', async (req, res) => {
+  const orders = await db.list();
+  res.json(orders.map(formatOrder));
 });
 
 // Valider → WhatsApp livreur
 router.post('/:id/validate', async (req, res) => {
   console.log('\n🔔 VALIDATION demandée pour', req.params.id);
-  const order = db.get(req.params.id);
+  const order = await db.get(req.params.id);
   if (!order) { console.log('❌ Commande introuvable'); return res.status(404).json({ error: 'Commande introuvable' }); }
   console.log('   Status actuel:', order.status);
   if (order.status !== 'paid') return res.status(400).json({ error: 'Commande non payée — statut actuel : ' + order.status });
 
-  const updated = db.update(order.id, { status: 'validated' });
+  const updated = await db.update(order.id, { status: 'validated' });
 
   broadcastOrder(updated);
   res.json({ ok: true });
@@ -116,7 +119,7 @@ router.post('/:id/validate', async (req, res) => {
 
 // Refuser → remboursement Stripe automatique
 router.post('/:id/reject', async (req, res) => {
-  const order = db.get(req.params.id);
+  const order = await db.get(req.params.id);
   if (!order) return res.status(404).json({ error: 'Commande introuvable' });
   if (order.status !== 'paid') return res.status(400).json({ error: 'Commande non payée' });
 
@@ -128,7 +131,7 @@ router.post('/:id/reject', async (req, res) => {
     }
   }
 
-  const updated = db.update(order.id, { status: 'rejected' });
+  const updated = await db.update(order.id, { status: 'rejected' });
   broadcastOrder(updated);
   res.json({ ok: true });
 });

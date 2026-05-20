@@ -5,7 +5,7 @@ const db      = require('../db');
 const { broadcastOrder } = require('./orders');
 
 // Stripe envoie le corps brut — express.raw() appliqué ici
-router.post('/', express.raw({ type: 'application/json' }), (req, res) => {
+router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
 
@@ -21,7 +21,7 @@ router.post('/', express.raw({ type: 'application/json' }), (req, res) => {
     const orderId = session.metadata?.order_id;
 
     if (orderId) {
-      const updated = db.update(orderId, {
+      const updated = await db.update(orderId, {
         status: 'paid',
         stripe_payment_intent: session.payment_intent,
       });

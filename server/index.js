@@ -111,21 +111,28 @@ app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISO
 // ── Statut ouvert/fermé ───────────────────────────────────────────
 const db = require('./db');
 
-app.get('/api/status', (req, res) => {
-  res.json(db.status.get());
+app.get('/api/status', async (req, res) => {
+  res.json(await db.status.get());
 });
 
-app.post('/api/status', (req, res) => {
+app.post('/api/status', async (req, res) => {
   if (!req.session || !req.session.authenticated) return res.status(401).json({ error: 'Non authentifié' });
   const { open } = req.body;
   if (typeof open !== 'boolean') return res.status(400).json({ error: 'open doit être un booléen' });
-  db.status.set(open);
+  await db.status.set(open);
   res.json({ ok: true, open });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🚀 Le Petit Bougiote API démarré sur http://localhost:${PORT}`);
-  console.log(`   Site client  : http://localhost:${PORT}`);
-  console.log(`   Dashboard    : http://localhost:${PORT}/dashboard`);
-  console.log(`   API          : http://localhost:${PORT}/api/orders\n`);
-});
+db.init()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`\n🚀 Le Petit Bougiote API démarré sur http://localhost:${PORT}`);
+      console.log(`   Site client  : http://localhost:${PORT}`);
+      console.log(`   Dashboard    : http://localhost:${PORT}/dashboard`);
+      console.log(`   API          : http://localhost:${PORT}/api/orders\n`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ Impossible de se connecter à la base de données:', err.message);
+    process.exit(1);
+  });
