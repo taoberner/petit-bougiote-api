@@ -1,4 +1,5 @@
 const twilio = require('twilio');
+const logger = require('./logger');
 
 async function notifyDriver(order) {
   const client = twilio(

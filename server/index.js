@@ -1,10 +1,12 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const express   = require('express');
-const session   = require('express-session');
-const cors      = require('cors');
-const path      = require('path');
-const helmet    = require('helmet');
-const rateLimit = require('express-rate-limit');
+const express      = require('express');
+const session      = require('express-session');
+const cors         = require('cors');
+const path         = require('path');
+const helmet       = require('helmet');
+const rateLimit    = require('express-rate-limit');
+const logger       = require('./logger');
+const errorHandler = require('./middleware/errorHandler');
 
 const { router: ordersRouter } = require('./routes/orders');
 const webhookRouter = require('./routes/webhook');
@@ -111,6 +113,8 @@ app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISO
 // ── Statut ouvert/fermé ───────────────────────────────────────────
 const db = require('./db');
 
+app.use(errorHandler);
+
 app.get('/api/status', async (req, res) => {
   res.json(await db.status.get());
 });
@@ -126,13 +130,14 @@ app.post('/api/status', async (req, res) => {
 db.init()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`\n🚀 Le Petit Bougiote API démarré sur http://localhost:${PORT}`);
-      console.log(`   Site client  : http://localhost:${PORT}`);
-      console.log(`   Dashboard    : http://localhost:${PORT}/dashboard`);
-      console.log(`   API          : http://localhost:${PORT}/api/orders\n`);
+      logger.info('Le Petit Bougiote API démarré', {
+        url: `http://localhost:${PORT}`,
+        dashboard: `http://localhost:${PORT}/dashboard`,
+        api: `http://localhost:${PORT}/api/orders`,
+      });
     });
   })
   .catch(err => {
-    console.error('❌ Impossible de se connecter à la base de données:', err.message);
+    logger.error('Impossible de se connecter à la base de données', { message: err.message });
     process.exit(1);
   });

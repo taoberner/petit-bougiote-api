@@ -1,9 +1,11 @@
-const express = require('express');
-const router  = express.Router();
-const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const db      = require('../db');
+const express    = require('express');
+const router     = express.Router();
+const stripe     = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const db         = require('../db');
 const { notifyDriver } = require('../notifications');
-const crypto  = require('crypto');
+const crypto     = require('crypto');
+const logger     = require('../logger');
+const validators = require('../validators');
 
 // SSE clients (dashboard iPad)
 const sseClients = new Set();
@@ -45,16 +47,21 @@ router.get('/events', async (req, res) => {
 // Créer une commande + session Stripe Checkout
 router.post('/', async (req, res) => {
   try {
+    // Validation Joi
+    const { error: joiError, value: body } = validators.createOrder.validate(req.body, { abortEarly: false, stripUnknown: true });
+    if (joiError) {
+      const details = joiError.details.map(d => d.message).join(', ');
+      logger.info('Commande rejetée — validation échouée', { details, ip: req.ip });
+      return res.status(400).json({ error: details });
+    }
+
     const restaurantOpen = await db.status.get();
     if (!restaurantOpen.open) {
+      logger.info('Commande rejetée — restaurant fermé', { customer: body.customer });
       return res.status(503).json({ error: 'Le restaurant est actuellement fermé. Les commandes ne sont pas acceptées.' });
     }
 
-    const { customer, phone, address, items, note } = req.body;
-
-    if (!customer || !phone || !address || !items?.length) {
-      return res.status(400).json({ error: 'Champs manquants' });
-    }
+    const { customer, phone, address, items, note } = body;
 
     const total   = items.reduce((sum, i) => sum + i.price * i.qty, 0);
     const orderId = crypto.randomUUID();
@@ -86,9 +93,10 @@ router.post('/', async (req, res) => {
       stripe_payment_intent: null,
     });
 
+    logger.info('Commande créée', { orderId: orderId.slice(0, 8).toUpperCase(), customer, total });
     res.json({ url: session.url });
   } catch (err) {
-    console.error(err);
+    logger.error('Erreur création commande', { message: err.message, stack: err.stack });
     res.status(500).json({ error: err.message });
   }
 });
@@ -101,10 +109,13 @@ router.get('/', async (req, res) => {
 
 // Valider → WhatsApp livreur
 router.post('/:id/validate', async (req, res) => {
-  console.log('\n🔔 VALIDATION demandée pour', req.params.id);
+  logger.info('Validation demandée', { orderId: req.params.id });
   const order = await db.get(req.params.id);
-  if (!order) { console.log('❌ Commande introuvable'); return res.status(404).json({ error: 'Commande introuvable' }); }
-  console.log('   Status actuel:', order.status);
+  if (!order) {
+    logger.info('Commande introuvable', { orderId: req.params.id });
+    return res.status(404).json({ error: 'Commande introuvable' });
+  }
+  logger.info('Statut actuel de la commande', { orderId: req.params.id, status: order.status });
   if (order.status !== 'paid') return res.status(400).json({ error: 'Commande non payée — statut actuel : ' + order.status });
 
   const updated = await db.update(order.id, { status: 'validated' });
@@ -113,8 +124,8 @@ router.post('/:id/validate', async (req, res) => {
   res.json({ ok: true });
 
   notifyDriver(updated)
-    .then(() => console.log('✅ WhatsApp envoyé !'))
-    .catch(e => console.error('❌ WhatsApp error:', e.message, e.code || ''));
+    .then(() => logger.info('WhatsApp envoyé au livreur', { orderId: order.id.slice(0, 8).toUpperCase() }))
+    .catch(e => logger.error('Erreur envoi WhatsApp', { message: e.message, code: e.code || '' }));
 });
 
 // Refuser → remboursement Stripe automatique
@@ -127,7 +138,7 @@ router.post('/:id/reject', async (req, res) => {
     try {
       await stripe.refunds.create({ payment_intent: order.stripe_payment_intent });
     } catch (e) {
-      console.error('Refund error:', e.message);
+      logger.error('Erreur remboursement Stripe', { message: e.message, orderId: req.params.id });
     }
   }
 

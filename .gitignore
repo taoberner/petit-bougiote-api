@@ -1,7 +1,11 @@
 node_modules/
 .env
-orders.json
+.env.local
+logs/
 *.log
 .DS_Store
+Thumbs.db
+orders.json
+status.json
 .claude/
 Capture*

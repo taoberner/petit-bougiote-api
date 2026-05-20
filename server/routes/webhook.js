@@ -3,6 +3,7 @@ const router  = express.Router();
 const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const db      = require('../db');
 const { broadcastOrder } = require('./orders');
+const logger  = require('../logger');
 
 // Stripe envoie le corps brut — express.raw() appliqué ici
 router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -12,7 +13,7 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
-    console.error('Webhook signature error:', err.message);
+    logger.error('Webhook signature error', { message: err.message });
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -28,7 +29,7 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
 
       if (updated) {
         broadcastOrder(updated);
-        console.log(`✅ Commande ${orderId.slice(0, 8).toUpperCase()} payée — dashboard notifié`);
+        logger.info('Commande payée — dashboard notifié', { orderId: orderId.slice(0, 8).toUpperCase() });
       }
     }
   }
