@@ -111,8 +111,17 @@
       border-left: 2px solid var(--bd);
     }
 
+    .menu-formule { margin-top: 0.4rem; display: flex; align-items: center; justify-content: space-between; background: oklch(14% 0.02 148); border: 1px solid oklch(47% 0.13 148 / 0.25); border-radius: 4px; padding: 0.35rem 0.6rem; font-size: 0.72rem; color: var(--g-hi); font-style: italic; }
+    .menu-formule-label { display: flex; flex-direction: column; gap: 0.1rem; }
+    .menu-formule-label strong { font-style: normal; font-size: 0.73rem; }
+    .menu-formule-label span { color: var(--muted); font-size: 0.68rem; }
+    .menu-formule .item-qty { gap: 0.3rem; }
+    .menu-formule .qty-btn { width: 20px; height: 20px; font-size: 0.8rem; }
+
     /* MENU ITEMS */
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .item-img { width: 100%; height: 140px; object-fit: cover; object-position: center 60%; border-radius: 4px; display: block; margin-bottom: 0.1rem; }
+    .item-img--top { object-position: center 75%; }
     .item-card {
       background: var(--bg-2); border: 1px solid var(--bd); border-radius: 6px;
       padding: 1.1rem; cursor: pointer;
@@ -332,20 +341,20 @@
 <script>
 const menuData = {
   burgers: [
-    { id:'alpin',   name:'Alpin',    price:1290, desc:'Bœuf, crousti, reblochon, salade, tomates, composée d\'oignons, sauce tartare', tag:'chef' },
-    { id:'magret',  name:'Magret',   price:1490, desc:'Magret de canard, brebis, roquette, tomates confites, composée d\'oignons, sauce poivre', tag:'sign' },
-    { id:'chevre',  name:'Chèvre',   price:1290, desc:'Bœuf, fromage de chèvre, roquette, tomates confites, oignons frits, noix, miel', tag:'sign' },
-    { id:'texan',   name:'Texan',    price:1290, desc:'Bœuf, bacon, cheddar fumé, salade, tomates, oignons frits, sauce barbecue', tag:'pop' },
-    { id:'classic', name:'Classic',  price:1090, desc:'Bœuf, comté, salade, tomates, oignons rouges, sauce biggy', tag:null },
-    { id:'bombay',  name:'Bombay',   price:1190, desc:'Poulet mariné, cheddar épicé, salade, tomates, oignons rouges, sauce mayo épicée', tag:'epi' },
-    { id:'cajun',   name:'Cajun',    price:1190, desc:'Poulet cajun, comté, salade, tomates, oignons rouges, sauce mayo cajun', tag:'epi' },
-    { id:'veggie',  name:'Veggie',   price:1290, desc:'Aubergine, tomates confites, roquette, chèvre, noix, sauce tartare', tag:'leg' },
-    { id:'cheese',  name:'Cheese',   price: 890, desc:'Bœuf, cheddar, sauce biggy', tag:null },
-    { id:'chiken',  name:'Chiken',   price: 890, desc:'Poulet, cheddar, mayo', tag:null },
+    { id:'alpin',   name:'Alpin',    price:1290, desc:'Bœuf, crousti, reblochon, salade, tomates, composée d\'oignons, sauce tartare', tag:'chef', img:'images/burger-alpin.png' },
+    { id:'magret',  name:'Magret',   price:1490, desc:'Magret de canard, brebis, roquette, tomates confites, composée d\'oignons, sauce poivre', tag:'sign', img:'images/burger-magret.png' },
+    { id:'chevre',  name:'Chèvre',   price:1290, desc:'Bœuf, fromage de chèvre, roquette, tomates confites, oignons frits, noix, miel', tag:'sign', img:'images/burger-chevre.png' },
+    { id:'texan',   name:'Texan',    price:1290, desc:'Bœuf, bacon, cheddar fumé, salade, tomates, oignons frits, sauce barbecue', tag:'pop', img:'images/burger-texan.png' },
+    { id:'classic', name:'Classic',  price:1090, desc:'Bœuf, comté, salade, tomates, oignons rouges, sauce biggy', tag:null, img:'images/burger-classic.png' },
+    { id:'bombay',  name:'Bombay',   price:1190, desc:'Poulet mariné, cheddar épicé, salade, tomates, oignons rouges, sauce mayo épicée', tag:'epi', img:'images/burger-bombay.png' },
+    { id:'cajun',   name:'Cajun',    price:1190, desc:'Poulet cajun, comté, salade, tomates, oignons rouges, sauce mayo cajun', tag:'epi', img:'images/burger-cajun.png' },
+    { id:'veggie',  name:'Veggie',   price:1290, desc:'Aubergine, tomates confites, roquette, chèvre, noix, sauce tartare', tag:'leg', img:'images/burger-veggie.png' },
+    { id:'cheese',  name:'Cheese',   price: 890, desc:'Bœuf, cheddar, sauce biggy', tag:null, img:'images/burger-cheese.png' },
+    { id:'chiken',  name:'Chiken',   price: 890, desc:'Poulet, cheddar, mayo', tag:null, img:'images/burger-chicken.png' },
   ],
   salades: [
-    { id:'ceasar',   name:'César',          price:1090, desc:'Iceberg, croutons, poulet, copeaux de parmesan, oignon frit, sauce cesar', tag:'pop' },
-    { id:'medit',    name:'Médit',          price:1090, desc:'Roquette, aubergine, feta, groseilles, noix, vinaigre basilic', tag:'leg' },
+    { id:'ceasar',   name:'César',          price:1090, desc:'Iceberg, croutons, poulet, copeaux de parmesan, oignon frit, sauce cesar', tag:'pop', img:'images/salade-caesar.png' },
+    { id:'medit',    name:'Médit',          price:1090, desc:'Roquette, aubergine, feta, groseilles, noix, vinaigre basilic', tag:'leg', img:'images/salade-mediterraneenne.png' },
     { id:'petitsal', name:'Petite Salade',  price: 150, desc:'Salade fraîche, tomates, oignons frits', tag:null },
   ],
   cote: [
@@ -388,7 +397,7 @@ const menuNotes = {
   cote: '',
   desserts: 'Gourmandises à partir de 2,40 € · Dessert assiette à partir de 4,30 €',
   boissons: 'Recettes classiques à partir de 1,50 € · Recettes gourmandes à partir de 4,00 €',
-  smoothies: 'Smoothies frais préparés à la commande',
+  smoothies: 'Smoothies préparés à la commande',
 };
 
 const tagLabels = { pop:'Populaire', chef:'Chef', sign:'Signature', epi:'Épicé', leg:'Léger', tend:'Tendance', inc:'Incontournable' };
@@ -425,8 +434,11 @@ function renderMenu() {
 
   grid.innerHTML = items.map(item => {
     const qty = cart[item.id]?.qty || 0;
+    const menuQty = cart[item.id]?.menuQty || 0;
+    const isBurger = currentTab === 'burgers';
     return `
       <div class="item-card ${qty > 0 ? 'in-cart' : ''}" id="card-${item.id}">
+        ${item.img ? `<img class="item-img${currentTab === 'salades' ? ' item-img--top' : ''}" src="${item.img}" alt="${item.name}" loading="lazy">` : ''}
         <div class="item-name">${item.name}</div>
         ${item.tag ? `<span class="tag tag-${item.tag}">${tagLabels[item.tag]}</span>` : ''}
         <div class="item-desc">${item.desc}</div>
@@ -438,6 +450,18 @@ function renderMenu() {
             <button class="qty-btn qty-plus" onclick="updateQty('${item.id}', 1)">+</button>
           </div>
         </div>
+        ${isBurger && qty > 0 ? `
+        <div class="menu-formule">
+          <div class="menu-formule-label">
+            <strong>Formule Menu</strong>
+            <span>Frites + petite salade · +3,00&thinsp;€/burger</span>
+          </div>
+          <div class="item-qty">
+            <button class="qty-btn qty-minus" onclick="updateMenu('${item.id}', -1)" ${menuQty === 0 ? 'style="opacity:.35;"' : ''}>−</button>
+            <span class="qty-val">${menuQty}</span>
+            <button class="qty-btn qty-plus" onclick="updateMenu('${item.id}', 1)" ${menuQty >= qty ? 'style="opacity:.35;"' : ''}>+</button>
+          </div>
+        </div>` : ''}
       </div>`;
   }).join('');
 }
@@ -447,8 +471,20 @@ function updateQty(id, delta) {
   if (!item) return;
   const current = cart[id]?.qty || 0;
   const next = Math.max(0, current + delta);
-  if (next === 0) delete cart[id];
-  else cart[id] = { ...item, qty: next };
+  if (next === 0) { delete cart[id]; }
+  else {
+    const menuQty = Math.min(cart[id]?.menuQty || 0, next);
+    cart[id] = { ...item, qty: next, menuQty };
+  }
+  renderMenu();
+  renderCart();
+}
+
+function updateMenu(id, delta) {
+  if (!cart[id]) return;
+  const max = cart[id].qty;
+  const current = cart[id].menuQty || 0;
+  cart[id].menuQty = Math.min(max, Math.max(0, current + delta));
   renderMenu();
   renderCart();
 }
@@ -457,7 +493,8 @@ function renderCart() {
   const items = Object.values(cart);
   const isEmpty = items.length === 0;
   const student = isStudent();
-  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const menuTotal = items.reduce((s, i) => s + (i.menuQty || 0) * 300, 0);
+  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0) + menuTotal;
   const discount = student ? Math.round(subtotal * 0.1) : 0;
   const total = subtotal - discount;
 
@@ -472,7 +509,12 @@ function renderCart() {
       <span class="cart-item-name">${i.name}</span>
       <span class="cart-item-qty">x${i.qty}</span>
       <span class="cart-item-price">${cents(i.price * i.qty)}</span>
-    </div>`).join('');
+    </div>
+    ${i.menuQty > 0 ? `<div class="cart-item" style="opacity:0.7;font-size:0.78rem;">
+      <span class="cart-item-name" style="padding-left:0.75rem;">↳ Formule Menu</span>
+      <span class="cart-item-qty">x${i.menuQty}</span>
+      <span class="cart-item-price">${cents(i.menuQty * 300)}</span>
+    </div>` : ''}`).join('');
 
   const subtotalRow = document.getElementById('cart-subtotal-row');
   const discountRow = document.getElementById('cart-discount-row');
@@ -513,12 +555,15 @@ async function placeOrder() {
     return;
   }
 
-  const items = rawItems.map(i => ({
-    id: i.id,
-    name: i.name,
-    price: student ? Math.round(i.price * 0.9) : i.price,
-    qty: i.qty,
-  }));
+  const items = rawItems.flatMap(i => {
+    const base = { id: i.id, name: i.name, price: student ? Math.round(i.price * 0.9) : i.price, qty: i.qty };
+    const menuQty = i.menuQty || 0;
+    if (menuQty > 0) {
+      const menuPrice = student ? Math.round(300 * 0.9) : 300;
+      return [base, { id: 'formule-menu', name: 'Formule Menu (frites + petite salade)', price: menuPrice, qty: menuQty }];
+    }
+    return [base];
+  });
 
   const noteWithStudent = student
     ? (note ? note + '\n[REMISE ÉTUDIANT −10%]' : '[REMISE ÉTUDIANT −10%]')

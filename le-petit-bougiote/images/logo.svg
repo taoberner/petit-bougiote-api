@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Fond blanc -->
+  <circle cx="100" cy="100" r="99" fill="white"/>
+  <!-- Anneau vert extérieur -->
+  <circle cx="100" cy="100" r="97" fill="none" stroke="#1a5c38" stroke-width="7"/>
+  <!-- Anneau vert intérieur fin -->
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#1a5c38" stroke-width="1.5"/>
+
+  <!-- Silhouette montagne (La Bougiote) -->
+  <path d="
+    M 22,142
+    Q 38,142 50,118
+    Q 58,102 68,108
+    Q 76,92  88,84
+    C 96,76  108,72  118,86
+    Q 128,100 140,106
+    Q 152,112 166,132
+    Q 170,138 178,142
+    L 178,152 L 22,152 Z
+  " fill="#1a5c38"/>
+
+  <!-- Texte LE PETIT BOUGIOTE en arc -->
+  <defs>
+    <path id="topArc" d="M 18,100 A 82,82 0 1,1 182,100"/>
+  </defs>
+  <text font-family="'Arial Narrow', Arial, Helvetica, sans-serif"
+        font-size="14" font-weight="bold" fill="#1a5c38" letter-spacing="3.5">
+    <textPath href="#topArc" startOffset="8%">LE PETIT BOUGIOTE</textPath>
+  </text>
+
+  <!-- Coffee & Burger en bas -->
+  <text x="100" y="166"
+        text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="13.5" font-style="italic" fill="#1a5c38">Coffee &amp; Burger</text>
+</svg>

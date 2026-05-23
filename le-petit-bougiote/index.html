@@ -242,6 +242,7 @@
       position: absolute; inset: 0;
       background: linear-gradient(to top, oklch(11% 0.030 45 / 0.82) 0%, transparent 55%);
       display: flex; flex-direction: column; justify-content: flex-end; padding: 1.75rem;
+      pointer-events: none;
     }
     .bc-cat { font-size: 0.68rem; font-style: italic; color: var(--a); margin-bottom: 0.3rem; letter-spacing: 0.1em; text-transform: uppercase; }
     .bc-title { font-family: 'Big Shoulders Display', sans-serif; font-weight: 800; font-size: 1.55rem; color: var(--cream); line-height: 1; }
@@ -366,6 +367,13 @@
     .foot-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
     .foot-bottom p { font-size: 0.7rem; color: oklch(32% 0.012 50); font-style: italic; }
     @media (max-width: 768px) { .foot-in { grid-template-columns: 1fr; gap: 2rem; } .foot-bottom { flex-direction: column; text-align: center; } }
+    .lightbox-trigger { cursor: zoom-in; }
+    .bc.lightbox-card { cursor: zoom-in; }
+    #lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: oklch(5% 0.01 45 / 0.92); align-items: center; justify-content: center; padding: 1.5rem; }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 6px; box-shadow: 0 8px 40px oklch(0% 0 0 / 0.6); }
+    #lightbox-close { position: fixed; top: 1.2rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; opacity: 0.8; }
+    #lightbox-close:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -451,7 +459,7 @@
       <span class="ticker-it">Café Spécialité</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Smoothies Maison</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Terrasse Ensoleillée</span><span class="ticker-sep">&middot;</span>
-      <span class="ticker-it">Produits Frais</span><span class="ticker-sep">&middot;</span>
+      <span class="ticker-it">Fait Maison</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">−10% Étudiants</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Note 5/5 Google</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Béziers</span><span class="ticker-sep">&middot;</span>
@@ -460,7 +468,7 @@
       <span class="ticker-it">Café Spécialité</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Smoothies Maison</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Terrasse Ensoleillée</span><span class="ticker-sep">&middot;</span>
-      <span class="ticker-it">Produits Frais</span><span class="ticker-sep">&middot;</span>
+      <span class="ticker-it">Fait Maison</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">−10% Étudiants</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Note 5/5 Google</span><span class="ticker-sep">&middot;</span>
       <span class="ticker-it">Béziers</span><span class="ticker-sep">&middot;</span>
@@ -484,7 +492,7 @@
       <div class="stat-div"></div>
       <div class="stat-it">
         <div class="stat-num">100%</div>
-        <div class="stat-lbl">Produits frais</div>
+        <div class="stat-lbl">Fait maison</div>
       </div>
     </div>
   </div>
@@ -496,18 +504,18 @@
     <div class="about-grid">
       <div class="about-img-col rev">
         <div class="about-img-main">
-          <img src="images/salle.jpg" alt="Intérieur chaleureux du restaurant" loading="lazy" />
+          <img src="images/salle.jpg" alt="Intérieur chaleureux du restaurant" loading="lazy" class="lightbox-trigger" />
         </div>
         <div class="about-img-float">
-          <img src="images/menu-burgers.png" alt="Nos burgers maison" loading="lazy" />
+          <img src="images/menu-burgers.png" alt="Nos burgers maison" loading="lazy" class="lightbox-trigger" />
         </div>
       </div>
       <div class="about-text">
         <div class="about-label rev">Notre histoire</div>
         <h2 class="about-h2 rev d1">Artisanal,<br>généreux<br><span class="ac">et sincère.</span></h2>
         <div class="about-body rev d2">
-          <p>Né en novembre 2025 au coeur de Béziers, <strong>Le Petit Bougiote</strong> est bien plus qu'un simple restaurant. C'est un lieu de vie chaleureux où chaque plat est préparé avec soin, avec des produits frais et locaux.</p>
-          <p>Notre chef vous accueille pour vous faire découvrir ses <strong>burgers gourmets</strong> aux saveurs authentiques, ses <strong>frites maison</strong> croustillantes, ses <strong>smoothies frais</strong> et ses cafés de spécialité accompagnés de délicieux gâteaux. Remise <strong>−10% étudiants</strong> sur toute la carte.</p>
+          <p>Né en novembre 2025 au coeur de Béziers, <strong>Le Petit Bougiote</strong> est bien plus qu'un simple restaurant. C'est un lieu de vie chaleureux où chaque plat est préparé avec soin.</p>
+          <p>Notre chef vous accueille pour vous faire découvrir ses <strong>burgers gourmets</strong> aux saveurs authentiques, ses <strong>frites maison</strong> croustillantes, ses <strong>smoothies</strong> et ses cafés de spécialité accompagnés de délicieux gâteaux. Remise <strong>−10% étudiants</strong> sur toute la carte.</p>
           <p>Profitez de notre <strong>terrasse ensoleillée</strong>, cadre idéal pour un déjeuner entre amis ou une pause gourmande.</p>
         </div>
         <div class="about-acts rev d3">
@@ -531,8 +539,8 @@
     </div>
 
     <div class="bento">
-      <div class="bc bc-a rev">
-        <img src="images/menu-burgers.png" alt="Carte des burgers artisanaux" class="bc-img" loading="lazy" />
+      <div class="bc bc-a rev lightbox-card">
+        <img src="images/menu-burgers.png" alt="Carte des burgers artisanaux" class="bc-img lightbox-trigger" loading="lazy" />
         <div class="bc-overlay">
           <div class="bc-cat">Midi &amp; Soir</div>
           <div class="bc-title">Les Burgers Maison</div>
@@ -553,8 +561,8 @@
           <div class="bc-pnote">Disponible tous les matins</div>
         </div>
       </div>
-      <div class="bc bc-c rev d1">
-        <img src="images/menu-gouter.png" alt="Coffee et gâteaux maison" class="bc-img" loading="lazy" />
+      <div class="bc bc-c rev d1 lightbox-card">
+        <img src="images/menu-gouter.png" alt="Coffee et gâteaux maison" class="bc-img lightbox-trigger" loading="lazy" />
         <div class="bc-overlay">
           <div class="bc-cat">Toute la journée</div>
           <div class="bc-title">Coffee &amp; Gâteaux</div>
@@ -591,10 +599,6 @@
         </div>
       </div>
     </div>
-    <div class="menu-img-wrap rev">
-      <img src="images/menu-petit-dej.png" alt="Menu petit-déjeuner complet" loading="lazy" />
-    </div>
-    <p class="menu-img-cap">Disponible tous les matins dès l'ouverture</p>
   </div>
 </section>
 
@@ -776,6 +780,26 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initReveal();
   animateHero();
+
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  function openLightboxFrom(el) {
+    const img = el.tagName === 'IMG' ? el : el.querySelector('img.bc-img');
+    if (!img) return;
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  document.querySelectorAll('.lightbox-trigger').forEach(img => {
+    img.addEventListener('click', () => openLightboxFrom(img));
+  });
+  document.querySelectorAll('.lightbox-card').forEach(card => {
+    card.addEventListener('click', () => openLightboxFrom(card));
+  });
+  document.getElementById('lightbox-close').addEventListener('click', closeLb);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 });
 
 /* NAV */
@@ -871,6 +895,13 @@ function initReveal() {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.rev').forEach(el => obs.observe(el));
 }
+
+function closeLb() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
 </script>
+
+<div id="lightbox">
+  <button id="lightbox-close">&times;</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
 </body>
 </html>
