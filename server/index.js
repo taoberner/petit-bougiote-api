@@ -84,13 +84,46 @@ app.get('/dashboard/login', (req, res) => {
 // ── Protection des routes API du dashboard ────────────────────────
 
 app.use('/api/orders', (req, res, next) => {
-  // La création de commande reste publique (appelée par les clients)
+  // Création de commande publique
   if (req.method === 'POST' && req.path === '/') return next();
+  // Routes réservées au livreur
+  if (req.path === '/driver/events' || req.path.endsWith('/driver-status')) {
+    if (req.session && req.session.driver) return next();
+    return res.status(401).json({ error: 'Non authentifié' });
+  }
+  // Reste du dashboard
   if (!req.session || !req.session.authenticated) {
     return res.status(401).json({ error: 'Non authentifié' });
   }
   next();
 });
+
+// ── Auth livreur ──────────────────────────────────────────────────
+
+app.post('/api/driver/login', (req, res) => {
+  if (req.body.pin === (process.env.DRIVER_PIN || '1234')) {
+    req.session.driver = true;
+    res.json({ ok: true });
+  } else {
+    res.status(401).json({ error: 'Code incorrect' });
+  }
+});
+
+app.post('/api/driver/logout', (req, res) => {
+  req.session.driver = false;
+  res.json({ ok: true });
+});
+
+// ── App livreur (protégée) ────────────────────────────────────────
+
+app.get('/livreur/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'livreur', 'login.html'));
+});
+
+app.use('/livreur', (req, res, next) => {
+  if (req.session && req.session.driver) return next();
+  res.redirect('/livreur/login');
+}, express.static(path.join(__dirname, '..', 'livreur')));
 
 // ── Dashboard (protégé) ───────────────────────────────────────────
 

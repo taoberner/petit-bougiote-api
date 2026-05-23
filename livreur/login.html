@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Livreur — Le Petit Bougiote</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: oklch(10% 0.02 148); font-family: system-ui, sans-serif; padding: 2rem;
+    }
+    .logo { font-size: 2.5rem; margin-bottom: 0.4rem; }
+    h1 { color: #fff; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.3rem; }
+    p { color: oklch(60% 0.05 148); font-size: 0.85rem; margin-bottom: 2.5rem; }
+    .pin-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; max-width: 280px; }
+    .pin-display {
+      display: flex; gap: 0.75rem; justify-content: center;
+    }
+    .pin-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: oklch(25% 0.03 148); border: 2px solid oklch(35% 0.05 148);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .pin-dot.filled { background: oklch(65% 0.18 148); border-color: oklch(65% 0.18 148); }
+    .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; width: 100%; }
+    .key {
+      background: oklch(18% 0.025 148); border: 1px solid oklch(28% 0.04 148);
+      border-radius: 12px; color: #fff; font-size: 1.5rem; font-weight: 500;
+      padding: 1rem; cursor: pointer; user-select: none; text-align: center;
+      transition: background 0.1s, transform 0.08s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .key:active { background: oklch(28% 0.06 148); transform: scale(0.94); }
+    .key.del { font-size: 1.1rem; color: oklch(55% 0.05 148); }
+    .key.empty { visibility: hidden; }
+    .err { color: oklch(65% 0.2 25); font-size: 0.82rem; min-height: 1.2em; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="logo">🛵</div>
+  <h1>App Livreur</h1>
+  <p>Le Petit Bougiote</p>
+
+  <div class="pin-wrap">
+    <div class="pin-display" id="display">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+
+    <div class="numpad">
+      <div class="key" data-k="1">1</div>
+      <div class="key" data-k="2">2</div>
+      <div class="key" data-k="3">3</div>
+      <div class="key" data-k="4">4</div>
+      <div class="key" data-k="5">5</div>
+      <div class="key" data-k="6">6</div>
+      <div class="key" data-k="7">7</div>
+      <div class="key" data-k="8">8</div>
+      <div class="key" data-k="9">9</div>
+      <div class="key empty"></div>
+      <div class="key" data-k="0">0</div>
+      <div class="key del" data-k="del">⌫</div>
+    </div>
+
+    <div class="err" id="err"></div>
+  </div>
+
+<script>
+let pin = '';
+const MAX = 4;
+
+document.querySelectorAll('.key').forEach(k => {
+  k.addEventListener('click', () => {
+    const val = k.dataset.k;
+    if (val === 'del') { pin = pin.slice(0, -1); }
+    else if (pin.length < MAX) { pin += val; }
+    render();
+    if (pin.length === MAX) submit();
+  });
+});
+
+function render() {
+  for (let i = 0; i < MAX; i++) {
+    document.getElementById('d' + i).classList.toggle('filled', i < pin.length);
+  }
+}
+
+async function submit() {
+  document.getElementById('err').textContent = '';
+  try {
+    const r = await fetch('/api/driver/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin }),
+    });
+    if (r.ok) { window.location.href = '/livreur/'; }
+    else { document.getElementById('err').textContent = 'Code incorrect'; pin = ''; render(); }
+  } catch { document.getElementById('err').textContent = 'Erreur réseau'; pin = ''; render(); }
+}
+</script>
+</body>
+</html>

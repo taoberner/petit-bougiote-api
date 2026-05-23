@@ -83,6 +83,15 @@ const db = {
     );
     return result.rows;
   },
+
+  async listByStatuses(statuses) {
+    const placeholders = statuses.map((_, i) => `$${i + 1}`).join(', ');
+    const result = await pool.query(
+      `SELECT * FROM orders WHERE status IN (${placeholders}) ORDER BY created_at DESC`,
+      statuses
+    );
+    return result.rows;
+  },
 };
 
 const status = {

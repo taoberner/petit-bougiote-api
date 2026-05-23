@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Livreur — Le Petit Bougiote</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: oklch(10% 0.02 148);
+      --bg2: oklch(14% 0.025 148);
+      --bd: oklch(22% 0.03 148);
+      --green: oklch(65% 0.18 148);
+      --orange: oklch(72% 0.18 65);
+      --red: oklch(62% 0.2 25);
+      --muted: oklch(50% 0.04 148);
+      --text: oklch(92% 0.01 148);
+    }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100dvh; }
+
+    /* HEADER */
+    .header {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--bg2); border-bottom: 1px solid var(--bd);
+      padding: env(safe-area-inset-top, 0) 1rem 0;
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; }
+    .header h1 { font-size: 1.05rem; font-weight: 700; }
+    .header h1 span { font-size: 1.3rem; margin-right: 0.4rem; }
+    .badge {
+      background: var(--green); color: #000; font-size: 0.68rem; font-weight: 700;
+      padding: 0.15rem 0.5rem; border-radius: 99px; display: none;
+    }
+    .badge.show { display: inline; }
+    .logout-btn {
+      background: none; border: 1px solid var(--bd); color: var(--muted);
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; border-radius: 6px; cursor: pointer;
+    }
+
+    /* TABS */
+    .tabs { display: flex; border-bottom: 1px solid var(--bd); background: var(--bg2); }
+    .tab {
+      flex: 1; padding: 0.75rem; text-align: center; font-size: 0.82rem; font-weight: 600;
+      color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+    /* CONTENT */
+    .content { padding: 1rem; padding-bottom: calc(env(safe-area-inset-bottom, 0) + 1rem); }
+
+    /* EMPTY */
+    .empty { text-align: center; color: var(--muted); padding: 4rem 1rem; font-size: 0.9rem; }
+    .empty .ico { font-size: 3rem; display: block; margin-bottom: 0.75rem; }
+
+    /* ORDER CARD */
+    .order {
+      background: var(--bg2); border: 1px solid var(--bd); border-radius: 12px;
+      margin-bottom: 0.9rem; overflow: hidden;
+    }
+    .order-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 1rem 0;
+    }
+    .order-id { font-size: 0.7rem; font-weight: 700; color: var(--muted); letter-spacing: 0.05em; }
+    .order-time { font-size: 0.7rem; color: var(--muted); }
+    .order-status {
+      font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 99px;
+    }
+    .status-validated { background: oklch(65% 0.18 148 / 0.15); color: var(--green); }
+    .status-en_route  { background: oklch(72% 0.18 65 / 0.15); color: var(--orange); }
+    .status-delivered { background: oklch(50% 0.04 148 / 0.2); color: var(--muted); }
+
+    .order-body { padding: 0.75rem 1rem; }
+    .customer-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.1rem; }
+    .customer-phone { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.6rem; }
+    .customer-phone a { color: var(--green); text-decoration: none; }
+
+    .address-wrap { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.8rem; }
+    .address-wrap .ico { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .address-text { font-size: 0.88rem; line-height: 1.4; }
+    .maps-btn {
+      display: inline-block; background: oklch(30% 0.05 220); color: oklch(75% 0.12 220);
+      font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 6px;
+      text-decoration: none; margin-top: 0.35rem;
+    }
+
+    .items-list { margin-bottom: 0.8rem; }
+    .item-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.18rem 0; }
+    .item-row .qty { color: var(--muted); margin-right: 0.3rem; }
+    .item-price { color: var(--muted); }
+    .total-row { display: flex; justify-content: space-between; font-size: 0.88rem; font-weight: 700; padding-top: 0.5rem; border-top: 1px solid var(--bd); }
+
+    .note { background: oklch(16% 0.02 50); border-left: 3px solid var(--orange); border-radius: 0 6px 6px 0; padding: 0.5rem 0.75rem; font-size: 0.8rem; color: oklch(80% 0.06 50); margin-bottom: 0.8rem; }
+
+    .actions { display: flex; gap: 0.6rem; padding: 0 1rem 1rem; }
+    .btn {
+      flex: 1; padding: 0.9rem; border-radius: 10px; border: none; font-size: 0.88rem;
+      font-weight: 700; cursor: pointer; transition: opacity 0.15s, transform 0.08s;
+    }
+    .btn:active { opacity: 0.8; transform: scale(0.97); }
+    .btn-enroute { background: var(--green); color: #000; }
+    .btn-delivered { background: var(--orange); color: #000; }
+    .btn-done { background: var(--bd); color: var(--muted); cursor: default; }
+
+    /* SPINNER */
+    .spinner { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.85rem; }
+
+    /* NOTIF TOAST */
+    .toast {
+      position: fixed; bottom: calc(env(safe-area-inset-bottom, 0) + 1.5rem); left: 50%; transform: translateX(-50%);
+      background: var(--bg2); border: 1px solid var(--green); color: var(--green);
+      font-size: 0.85rem; font-weight: 600; padding: 0.65rem 1.2rem; border-radius: 99px;
+      white-space: nowrap; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1><span>🛵</span>Livraisons <span class="badge" id="badge"></span></h1>
+    <button class="logout-btn" id="logoutBtn">Quitter</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="active">À livrer</div>
+    <div class="tab" data-tab="done">Livrées</div>
+  </div>
+</div>
+
+<div class="content" id="content">
+  <div class="spinner">Chargement…</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let orders = {};
+let currentTab = 'active';
+
+// ── SSE ──────────────────────────────────────────────────────────
+const es = new EventSource('/api/orders/driver/events');
+es.onmessage = e => {
+  const order = JSON.parse(e.data);
+  orders[order.id] = order;
+  render();
+  if (order.status === 'validated') toast('🛵 Nouvelle livraison !');
+};
+es.onerror = () => {
+  setTimeout(() => location.reload(), 3000);
+};
+
+// ── TABS ──────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    currentTab = t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    render();
+  });
+});
+
+// ── LOGOUT ───────────────────────────────────────────────────────
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await fetch('/api/driver/logout', { method: 'POST' });
+  location.href = '/livreur/login';
+});
+
+// ── RENDER ────────────────────────────────────────────────────────
+function render() {
+  const all = Object.values(orders);
+  const active = all.filter(o => ['validated', 'en_route'].includes(o.status));
+  const done   = all.filter(o => o.status === 'delivered');
+
+  const badge = document.getElementById('badge');
+  if (active.length > 0) { badge.textContent = active.length; badge.classList.add('show'); }
+  else { badge.classList.remove('show'); }
+
+  const list = currentTab === 'active' ? active : done;
+  list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+  const content = document.getElementById('content');
+  if (list.length === 0) {
+    content.innerHTML = `<div class="empty"><span class="ico">${currentTab === 'active' ? '✅' : '📭'}</span>${currentTab === 'active' ? 'Aucune livraison en attente' : 'Aucune livraison terminée aujourd\'hui'}</div>`;
+    return;
+  }
+  content.innerHTML = list.map(renderOrder).join('');
+}
+
+function renderOrder(o) {
+  const items = Array.isArray(o.items) ? o.items : JSON.parse(o.items || '[]');
+  const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(o.address)}`;
+  const timeStr = new Date(o.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const statusLabel = { validated: 'À récupérer', en_route: 'En route', delivered: 'Livré' }[o.status] || o.status;
+  const statusClass = `status-${o.status}`;
+
+  const itemsHtml = items.map(i => `
+    <div class="item-row">
+      <span><span class="qty">x${i.qty}</span>${i.name}</span>
+      <span class="item-price">${((i.price * i.qty) / 100).toFixed(2).replace('.', ',')}€</span>
+    </div>`).join('');
+
+  let actions = '';
+  if (o.status === 'validated') {
+    actions = `<button class="btn btn-enroute" onclick="updateStatus('${o.id}','en_route')">🛵 Je pars !</button>`;
+  } else if (o.status === 'en_route') {
+    actions = `<button class="btn btn-delivered" onclick="updateStatus('${o.id}','delivered')">✅ Livré !</button>`;
+  }
+
+  return `
+    <div class="order" id="order-${o.id}">
+      <div class="order-head">
+        <span class="order-id">#${o.id.slice(0,8).toUpperCase()}</span>
+        <span class="order-status ${statusClass}">${statusLabel}</span>
+        <span class="order-time">${timeStr}</span>
+      </div>
+      <div class="order-body">
+        <div class="customer-name">${o.customer}</div>
+        <div class="customer-phone"><a href="tel:${o.phone}">${o.phone}</a></div>
+        <div class="address-wrap">
+          <span class="ico">📍</span>
+          <div>
+            <div class="address-text">${o.address}</div>
+            <a class="maps-btn" href="${mapsUrl}" target="_blank">Ouvrir dans Maps →</a>
+          </div>
+        </div>
+        <div class="items-list">
+          ${itemsHtml}
+          <div class="total-row"><span>Total payé</span><span>${o.total_eur}€</span></div>
+        </div>
+        ${o.note ? `<div class="note">📝 ${o.note}</div>` : ''}
+      </div>
+      ${actions ? `<div class="actions">${actions}</div>` : ''}
+    </div>`;
+}
+
+async function updateStatus(id, status) {
+  const r = await fetch(`/api/orders/${id}/driver-status`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  });
+  if (r.ok) {
+    orders[id].status = status;
+    if (status === 'delivered') toast('✅ Livraison confirmée !');
+    render();
+  }
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

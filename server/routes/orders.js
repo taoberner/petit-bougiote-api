@@ -107,6 +107,46 @@ router.get('/', async (req, res) => {
   res.json(orders.map(formatOrder));
 });
 
+// SSE — app livreur s'abonne ici
+const sseDriverClients = new Set();
+
+function broadcastDriver(order) {
+  const data = `data: ${JSON.stringify(formatOrder(order))}\n\n`;
+  sseDriverClients.forEach(res => res.write(data));
+}
+
+router.get('/driver/events', async (req, res) => {
+  if (!req.session || !req.session.driver) return res.status(401).end();
+  res.set({
+    'Content-Type':      'text/event-stream',
+    'Cache-Control':     'no-cache',
+    'Connection':        'keep-alive',
+    'X-Accel-Buffering': 'no',
+  });
+  res.flushHeaders();
+  res.write(': connected\n\n');
+  sseDriverClients.add(res);
+
+  const active = await db.listByStatuses(['validated', 'en_route']);
+  active.forEach(o => res.write(`data: ${JSON.stringify(formatOrder(o))}\n\n`));
+
+  const heartbeat = setInterval(() => res.write(': ping\n\n'), 25000);
+  req.on('close', () => { sseDriverClients.delete(res); clearInterval(heartbeat); });
+});
+
+// Mise à jour statut par le livreur
+router.post('/:id/driver-status', async (req, res) => {
+  if (!req.session || !req.session.driver) return res.status(401).json({ error: 'Non authentifié' });
+  const { status } = req.body;
+  if (!['en_route', 'delivered'].includes(status)) return res.status(400).json({ error: 'Statut invalide' });
+  const order = await db.get(req.params.id);
+  if (!order) return res.status(404).json({ error: 'Commande introuvable' });
+  const updated = await db.update(order.id, { status });
+  broadcastOrder(updated);
+  broadcastDriver(updated);
+  res.json({ ok: true });
+});
+
 // Valider → WhatsApp livreur
 router.post('/:id/validate', async (req, res) => {
   logger.info('Validation demandée', { orderId: req.params.id });
@@ -121,6 +161,7 @@ router.post('/:id/validate', async (req, res) => {
   const updated = await db.update(order.id, { status: 'validated' });
 
   broadcastOrder(updated);
+  broadcastDriver(updated);
   res.json({ ok: true });
 
   notifyDriver(updated)
